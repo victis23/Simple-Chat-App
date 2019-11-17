@@ -9,17 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-	
-	struct Keys {
-		struct Images {
-			static var viewMainBackgroundImage = "background"
-			static var applogo = "messageIcon"
-		}
-		struct Segues {
-			static var loginScreen = "access"
-		}
-	}
-	
+
 	//MARK: IBOutlets
 	@IBOutlet weak var registerButton: UIButton!
 	@IBOutlet weak var loginButton: UIButton!
@@ -67,10 +57,8 @@ class ViewController: UIViewController {
 	@IBAction func loginButtonSelected(_ sender: UIButton) {
 		switch sender.tag {
 		case 1:
-			print("loginButton = \(sender.titleLabel!)")
 			performSegue(withIdentifier: Keys.Segues.loginScreen, sender: sender.tag)
 		default:
-			print("Registration = \(sender.titleLabel!)")
 			performSegue(withIdentifier: Keys.Segues.loginScreen, sender: sender.tag)
 		}
 	}
