@@ -15,5 +15,10 @@ struct Keys {
 	}
 	struct Segues {
 		static var loginScreen = "access"
+		static var chatWindow = "chat"
+		static var homeFromChatWindow = "homeFromChat"
+	}
+	struct Cells {
+		static var chatWindowUniqueIdentifier = "chats"
 	}
 }

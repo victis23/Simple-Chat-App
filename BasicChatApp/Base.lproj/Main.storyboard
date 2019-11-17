@@ -63,9 +63,9 @@
                                 <color key="textColor" red="0.067683362863594637" green="0.56677215683906357" blue="0.91980725526809692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat App" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="9mk-Fc-Tsp">
-                                <rect key="frame" x="25" y="271" width="364" height="104"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="80"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat App" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="9mk-Fc-Tsp">
+                                <rect key="frame" x="25" y="271" width="364" height="101"/>
+                                <fontDescription key="fontDescription" name="SnellRoundhand" family="Snell Roundhand" pointSize="80"/>
                                 <color key="textColor" red="0.91980725529999996" green="0.49249378519999998" blue="0.31431207020000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
