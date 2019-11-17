@@ -93,6 +93,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundImage" destination="Xtd-Ov-59M" id="yEF-of-fif"/>
+                        <outlet property="communicationStack" destination="3c6-xV-xyK" id="GBf-Rl-SBA"/>
                         <outlet property="messageField" destination="hAU-1A-1QY" id="KIs-ZZ-pQc"/>
                         <outlet property="sendButton" destination="Pzq-ig-Mg3" id="8F8-uL-gQ2"/>
                         <outlet property="tableView" destination="utJ-Wy-YdX" id="7Qn-Hz-dRD"/>

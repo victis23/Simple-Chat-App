@@ -21,4 +21,7 @@ struct Keys {
 	struct Cells {
 		static var chatWindowUniqueIdentifier = "chats"
 	}
+	struct FireBaseKeys {
+		static var collection = "messages"
+	}
 }

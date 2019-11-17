@@ -25,6 +25,9 @@
 		7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2B238180290079D39E /* ChatViewController.swift */; };
 		7DDB1A30238180A90079D39E /* ChatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2E238180A90079D39E /* ChatsTableViewCell.swift */; };
 		7DDB1A31238180A90079D39E /* ChatsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */; };
+		7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */; };
+		7DDB1A352381C2280079D39E /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDB1A342381C2280079D39E /* AuthenticationServices.framework */; };
+		7DDB1A382381D9290079D39E /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A372381D9290079D39E /* Chats.swift */; };
 		93C700D386C74670AA0E79FE /* Pods_BasicChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C10872E17BE89EEEF5286F7 /* Pods_BasicChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +76,9 @@
 		7DDB1A2B238180290079D39E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		7DDB1A2E238180A90079D39E /* ChatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsTableViewCell.swift; sourceTree = "<group>"; };
 		7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatsTableViewCell.xib; sourceTree = "<group>"; };
+		7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordHandlerModel.swift; sourceTree = "<group>"; };
+		7DDB1A342381C2280079D39E /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
+		7DDB1A372381D9290079D39E /* Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
 		98D4295B66D375160FDE523D /* Pods-BasicChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasicChatApp.debug.xcconfig"; path = "Target Support Files/Pods-BasicChatApp/Pods-BasicChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DDB1A352381C2280079D39E /* AuthenticationServices.framework in Frameworks */,
 				93C700D386C74670AA0E79FE /* Pods_BasicChatApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,6 +112,7 @@
 		46B76D51D848C18E25DB071E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7DDB1A342381C2280079D39E /* AuthenticationServices.framework */,
 				7C10872E17BE89EEEF5286F7 /* Pods_BasicChatApp.framework */,
 			);
 			name = Frameworks;
@@ -137,6 +145,7 @@
 		7D278B8C2380B2BF00433A7C /* BasicChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				7DDB1A362381D91A0079D39E /* Models */,
 				7DDB1A2D238180730079D39E /* Views */,
 				7D6BA68223815CF600EDE983 /* Simple Chat.entitlements */,
 				7D278BC22380D18000433A7C /* Controller */,
@@ -150,6 +159,7 @@
 				7D278B9E2380B2C000433A7C /* Info.plist */,
 				7D278B962380B2BF00433A7C /* BasicChatApp.xcdatamodeld */,
 				7D6BA68323816B5800EDE983 /* Keys.swift */,
+				7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */,
 			);
 			path = BasicChatApp;
 			sourceTree = "<group>";
@@ -189,6 +199,14 @@
 				7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7DDB1A362381D91A0079D39E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7DDB1A372381D9290079D39E /* Chats.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		CAC1F401290D9FCE382AA5C9 /* Pods */ = {
@@ -387,6 +405,8 @@
 				7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */,
 				7D278B922380B2BF00433A7C /* ViewController.swift in Sources */,
 				7D278B8E2380B2BF00433A7C /* AppDelegate.swift in Sources */,
+				7DDB1A382381D9290079D39E /* Chats.swift in Sources */,
+				7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */,
 				7D278B902380B2BF00433A7C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

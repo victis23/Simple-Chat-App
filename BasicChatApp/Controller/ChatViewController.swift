@@ -12,15 +12,7 @@ import FirebaseFirestore
 
 class ChatViewController: UIViewController {
 	
-	struct Chats : Hashable {
-		var user : String
-		var message: String
-		var identifer :String
-		
-		func hash(into hasher: inout Hasher){
-			hasher.combine(identifer)
-		}
-	}
+	
 	
 	enum Sections {
 		case main
@@ -28,15 +20,20 @@ class ChatViewController: UIViewController {
 	
 	//MARK: - View Controller Property List Begins | IBOutlets & Class Properties
 	
+	@IBOutlet weak var communicationStack: UIStackView!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var backgroundImage: UIImageView!
 	@IBOutlet weak var sendButton: UIButton!
 	@IBOutlet weak var messageField: UITextView!
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
+	// Holds data about user currently signed in.
 	var user : AuthDataResult?
+	// Names used to identify Keyboard events.
 	var show : NSNotification.Name = UIResponder.keyboardDidShowNotification
 	var hide : NSNotification.Name = UIResponder.keyboardDidHideNotification
+	// Saves original size of main view.
 	var originalViewHeight : CGRect = CGRect()
+	var database = Firestore.firestore()
 	
 	/// Holds chat messages that will display within tableview
 	/// - Important: This property calls `createSnapShot` everytime it is updated.
@@ -67,6 +64,7 @@ class ChatViewController: UIViewController {
 	/// Sets aesthethic look for `messageField`
 	func setMessageField(){
 		messageField.layer.cornerRadius = 5
+		messageField.backgroundColor = .white
 	}
 	
 	/// Sets aesthethic look for `sendButton`
@@ -90,10 +88,23 @@ class ChatViewController: UIViewController {
 			let keyboardRawSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
 			let keybaordFrame = keyboardRawSize?.cgRectValue
 			guard let keyboardHeight = keybaordFrame?.height else {return}
-			view.frame.size.height = view.frame.height - keyboardHeight
+			let difference = (keyboardHeight / 2 ) + messageField.frame.height
+			//view.frame.size.height = difference
+			moveTextBoxAndSendButton(amount: difference)
 		default:
-			view.frame.size.height = self.originalViewHeight.height
+			//view.frame.size.height = self.originalViewHeight.height
+			UIView.animate(withDuration: 0.5) {
+				self.communicationStack.transform = .identity
+			}
 		}
+	}
+	
+	func moveTextBoxAndSendButton(amount:CGFloat){
+		UIView.animate(withDuration: 0.5, animations: {
+			self.communicationStack.transform = CGAffineTransform(translationX: 0, y: (amount * -1))
+			self.loadViewIfNeeded()
+		}, completion: nil)
+		
 	}
 	
 	//MARK: IBActions
@@ -104,6 +115,7 @@ class ChatViewController: UIViewController {
 		
 		let message = Chats(user: users.email!, message: messageBody, identifer: users.uid)
 		
+		database.collection(Keys.FireBaseKeys.collection)
 		
 		print(message)
 		messageField.text = nil
