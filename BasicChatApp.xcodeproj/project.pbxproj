@@ -16,6 +16,7 @@
 		7D278B9D2380B2C000433A7C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D278B9B2380B2C000433A7C /* LaunchScreen.storyboard */; };
 		7D278BA82380B2C000433A7C /* BasicChatAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BA72380B2C000433A7C /* BasicChatAppTests.swift */; };
 		7D278BB32380B2C000433A7C /* BasicChatAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BB22380B2C000433A7C /* BasicChatAppUITests.swift */; };
+		7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D278BC02380CC0A00433A7C /* Register.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		7D278BAE2380B2C000433A7C /* BasicChatAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicChatAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D278BB22380B2C000433A7C /* BasicChatAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicChatAppUITests.swift; sourceTree = "<group>"; };
 		7D278BB42380B2C000433A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D278BC02380CC0A00433A7C /* Register.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Register.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */,
 				7D278B912380B2BF00433A7C /* ViewController.swift */,
 				7D278B932380B2BF00433A7C /* Main.storyboard */,
+				7D278BC02380CC0A00433A7C /* Register.storyboard */,
 				7D278B992380B2C000433A7C /* Assets.xcassets */,
 				7D278B9B2380B2C000433A7C /* LaunchScreen.storyboard */,
 				7D278B9E2380B2C000433A7C /* Info.plist */,
@@ -238,6 +241,7 @@
 				7D278B9D2380B2C000433A7C /* LaunchScreen.storyboard in Resources */,
 				7D278B9A2380B2C000433A7C /* Assets.xcassets in Resources */,
 				7D278B952380B2BF00433A7C /* Main.storyboard in Resources */,
+				7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

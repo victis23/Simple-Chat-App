@@ -9,12 +9,80 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+	
+	struct Keys {
+		struct Images {
+			static var viewMainBackgroundImage = "background"
+			static var applogo = "messageIcon"
+		}
+		struct Segues {
+			static var loginScreen = "access"
+		}
+	}
+	
+	//MARK: IBOutlets
+	@IBOutlet weak var registerButton: UIButton!
+	@IBOutlet weak var loginButton: UIButton!
+	@IBOutlet weak var backGroundImage: UIImageView!
+	@IBOutlet weak var iconImage: UIImageView!
+	
+	// MARK: - Instance State
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do any additional setup after loading the view.
+		setupBackGroundAesthetics()
+		setButtonAesthetics()
+		setupIconImage()
 	}
-
-
+	
+	// MARK: - Instance Methods
+	
+	/// Sets opacity and background for view controller.
+	func setupBackGroundAesthetics(){
+		backGroundImage.alpha = 0.8
+		backGroundImage.image = UIImage(named: Keys.Images.viewMainBackgroundImage)
+		backGroundImage.contentMode = .scaleAspectFill
+	}
+	
+	/// Sets up look of buttons for view controller.
+	func setButtonAesthetics(){
+		var count = 0
+		[registerButton,loginButton,].forEach({
+			$0?.layer.cornerRadius = 5
+			$0?.layer.shadowOpacity = 0.2
+			$0?.layer.shadowOffset = CGSize(width: 0, height: 1.0)
+			$0?.tag = count
+			count += 1
+		})
+	}
+	
+	/// Sets up logo image.
+	func setupIconImage(){
+		iconImage.image = UIImage(named: Keys.Images.applogo)
+		iconImage.contentMode = .scaleAspectFit
+	}
+	
+	// MARK: IBActions
+	
+	@IBAction func loginButtonSelected(_ sender: UIButton) {
+		switch sender.tag {
+		case 1:
+			print("loginButton = \(sender.titleLabel!)")
+			performSegue(withIdentifier: Keys.Segues.loginScreen, sender: sender.tag)
+		default:
+			print("Registration = \(sender.titleLabel!)")
+			performSegue(withIdentifier: Keys.Segues.loginScreen, sender: sender.tag)
+		}
+	}
+	
+	// MARK: - Navigation
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == Keys.Segues.loginScreen {
+			
+		}
+	}
+	
+	
 }
 
