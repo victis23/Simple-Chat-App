@@ -93,14 +93,14 @@ class ChatViewController: UIViewController {
 			moveTextBoxAndSendButton(amount: difference)
 		default:
 			//view.frame.size.height = self.originalViewHeight.height
-			UIView.animate(withDuration: 0.5) {
+			UIView.animate(withDuration: 0.2) {
 				self.communicationStack.transform = .identity
 			}
 		}
 	}
 	
 	func moveTextBoxAndSendButton(amount:CGFloat){
-		UIView.animate(withDuration: 0.5, animations: {
+		UIView.animate(withDuration: 0.2, animations: {
 			self.communicationStack.transform = CGAffineTransform(translationX: 0, y: (amount * -1))
 			self.loadViewIfNeeded()
 		}, completion: nil)
@@ -115,7 +115,14 @@ class ChatViewController: UIViewController {
 		
 		let message = Chats(user: users.email!, message: messageBody, identifer: users.uid)
 		
-		database.collection(Keys.FireBaseKeys.collection)
+		let collection = database.collection(Keys.FireBaseKeys.collection)
+		collection.addDocument(data: [
+			"Sender": message.user,
+			"MessageBody": message.message,
+		]) { (error) in
+			guard let error = error else {return}
+			print(error.localizedDescription)
+		}
 		
 		print(message)
 		messageField.text = nil

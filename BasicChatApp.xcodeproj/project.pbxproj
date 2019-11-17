@@ -68,7 +68,7 @@
 		7D278BB42380B2C000433A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D278BC02380CC0A00433A7C /* Register.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Register.storyboard; sourceTree = "<group>"; };
 		7D278BC32380D1AE00433A7C /* AccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessViewController.swift; sourceTree = "<group>"; };
-		7D5B19742380DADE00527944 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		7D5B19742380DADE00527944 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		7D5B19762380DBB700527944 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7D6BA68223815CF600EDE983 /* Simple Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Simple Chat.entitlements"; sourceTree = "<group>"; };
 		7D6BA68323816B5800EDE983 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
@@ -145,12 +145,12 @@
 		7D278B8C2380B2BF00433A7C /* BasicChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				7D278B8D2380B2BF00433A7C /* AppDelegate.swift */,
+				7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */,
 				7DDB1A362381D91A0079D39E /* Models */,
 				7DDB1A2D238180730079D39E /* Views */,
 				7D6BA68223815CF600EDE983 /* Simple Chat.entitlements */,
 				7D278BC22380D18000433A7C /* Controller */,
-				7D278B8D2380B2BF00433A7C /* AppDelegate.swift */,
-				7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */,
 				7D278B932380B2BF00433A7C /* Main.storyboard */,
 				7D278BC02380CC0A00433A7C /* Register.storyboard */,
 				7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */,
