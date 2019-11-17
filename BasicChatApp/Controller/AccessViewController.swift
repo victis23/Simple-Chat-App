@@ -9,22 +9,25 @@
 import UIKit
 
 class AccessViewController: UIViewController {
+	
+	@IBOutlet weak var isReg: UILabel!
+	var isRegistration : Bool?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+		setView()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+	
+	func checkIfIsRegistration(is bool: Bool){
+		isRegistration = bool
+	}
+	
+	func setView(){
+		guard let isRegistrationView = isRegistration else {return}
+		if isRegistrationView {
+			
+		}else{
+			
+		}
+	}
 }

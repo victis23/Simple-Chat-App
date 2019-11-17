@@ -79,7 +79,15 @@ class ViewController: UIViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == Keys.Segues.loginScreen {
+			let controller = segue.destination as! AccessViewController
+			guard let buttonTag = sender as? Int else {return}
 			
+			switch buttonTag {
+			case 1:
+				controller.checkIfIsRegistration(is: false)
+			default:
+				controller.checkIfIsRegistration(is: true)
+			}
 		}
 	}
 	

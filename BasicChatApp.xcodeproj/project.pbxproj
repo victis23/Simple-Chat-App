@@ -18,6 +18,8 @@
 		7D278BB32380B2C000433A7C /* BasicChatAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BB22380B2C000433A7C /* BasicChatAppUITests.swift */; };
 		7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D278BC02380CC0A00433A7C /* Register.storyboard */; };
 		7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BC32380D1AE00433A7C /* AccessViewController.swift */; };
+		7D5B19752380DADE00527944 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19742380DADE00527944 /* Podfile */; };
+		7D5B19772380DBB700527944 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19762380DBB700527944 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7D278B8A2380B2BF00433A7C /* BasicChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D278B8A2380B2BF00433A7C /* Simple Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D278B8D2380B2BF00433A7C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		7D278B912380B2BF00433A7C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -55,6 +57,8 @@
 		7D278BB42380B2C000433A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D278BC02380CC0A00433A7C /* Register.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Register.storyboard; sourceTree = "<group>"; };
 		7D278BC32380D1AE00433A7C /* AccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessViewController.swift; sourceTree = "<group>"; };
+		7D5B19742380DADE00527944 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		7D5B19762380DBB700527944 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,8 @@
 		7D278B812380B2BF00433A7C = {
 			isa = PBXGroup;
 			children = (
+				7D5B19742380DADE00527944 /* Podfile */,
+				7D5B19762380DBB700527944 /* GoogleService-Info.plist */,
 				7D278B8C2380B2BF00433A7C /* BasicChatApp */,
 				7D278BA62380B2C000433A7C /* BasicChatAppTests */,
 				7D278BB12380B2C000433A7C /* BasicChatAppUITests */,
@@ -95,7 +101,7 @@
 		7D278B8B2380B2BF00433A7C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7D278B8A2380B2BF00433A7C /* BasicChatApp.app */,
+				7D278B8A2380B2BF00433A7C /* Simple Chat.app */,
 				7D278BA32380B2C000433A7C /* BasicChatAppTests.xctest */,
 				7D278BAE2380B2C000433A7C /* BasicChatAppUITests.xctest */,
 			);
@@ -162,7 +168,7 @@
 			);
 			name = BasicChatApp;
 			productName = BasicChatApp;
-			productReference = 7D278B8A2380B2BF00433A7C /* BasicChatApp.app */;
+			productReference = 7D278B8A2380B2BF00433A7C /* Simple Chat.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7D278BA22380B2C000433A7C /* BasicChatAppTests */ = {
@@ -249,10 +255,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5B19752380DADE00527944 /* Podfile in Resources */,
 				7D278B9D2380B2C000433A7C /* LaunchScreen.storyboard in Resources */,
 				7D278B9A2380B2C000433A7C /* Assets.xcassets in Resources */,
 				7D278B952380B2BF00433A7C /* Main.storyboard in Resources */,
 				7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */,
+				7D5B19772380DBB700527944 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,7 +470,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.duhmarket.BasicChatApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Simple Chat";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -480,7 +488,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.duhmarket.BasicChatApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Simple Chat";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
