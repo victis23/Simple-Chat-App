@@ -17,6 +17,7 @@
 		7D278BA82380B2C000433A7C /* BasicChatAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BA72380B2C000433A7C /* BasicChatAppTests.swift */; };
 		7D278BB32380B2C000433A7C /* BasicChatAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BB22380B2C000433A7C /* BasicChatAppUITests.swift */; };
 		7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D278BC02380CC0A00433A7C /* Register.storyboard */; };
+		7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BC32380D1AE00433A7C /* AccessViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		7D278BB22380B2C000433A7C /* BasicChatAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicChatAppUITests.swift; sourceTree = "<group>"; };
 		7D278BB42380B2C000433A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D278BC02380CC0A00433A7C /* Register.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Register.storyboard; sourceTree = "<group>"; };
+		7D278BC32380D1AE00433A7C /* AccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,9 +105,9 @@
 		7D278B8C2380B2BF00433A7C /* BasicChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				7D278BC22380D18000433A7C /* Controller */,
 				7D278B8D2380B2BF00433A7C /* AppDelegate.swift */,
 				7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */,
-				7D278B912380B2BF00433A7C /* ViewController.swift */,
 				7D278B932380B2BF00433A7C /* Main.storyboard */,
 				7D278BC02380CC0A00433A7C /* Register.storyboard */,
 				7D278B992380B2C000433A7C /* Assets.xcassets */,
@@ -132,6 +134,15 @@
 				7D278BB42380B2C000433A7C /* Info.plist */,
 			);
 			path = BasicChatAppUITests;
+			sourceTree = "<group>";
+		};
+		7D278BC22380D18000433A7C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7D278B912380B2BF00433A7C /* ViewController.swift */,
+				7D278BC32380D1AE00433A7C /* AccessViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D278B982380B2BF00433A7C /* BasicChatApp.xcdatamodeld in Sources */,
+				7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */,
 				7D278B922380B2BF00433A7C /* ViewController.swift in Sources */,
 				7D278B8E2380B2BF00433A7C /* AppDelegate.swift in Sources */,
 				7D278B902380B2BF00433A7C /* SceneDelegate.swift in Sources */,
