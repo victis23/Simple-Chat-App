@@ -164,7 +164,8 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 		if segue.identifier == Keys.Segues.chatWindow {
 			let navigationController = segue.destination as? UINavigationController
 			let destinationController = navigationController?.topViewController as! ChatViewController
-			destinationController.user = sender as? AuthDataResult
+//			destinationController.user = sender as? AuthDataResult
+			print(destinationController)
 			clearAllFields()
 			view.endEditing(true)
 		}

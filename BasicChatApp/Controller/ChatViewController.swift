@@ -9,10 +9,9 @@
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
+import Combine
 
-class ChatViewController: UIViewController {
-	
-	
+class ChatViewController: UIViewController, ObservableObject {
 	
 	enum Sections {
 		case main
@@ -25,109 +24,119 @@ class ChatViewController: UIViewController {
 	@IBOutlet weak var backgroundImage: UIImageView!
 	@IBOutlet weak var sendButton: UIButton!
 	@IBOutlet weak var messageField: UITextView!
+	
+	// DataSource
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
-	// Holds data about user currently signed in.
-	var user : AuthDataResult?
+	
 	// Names used to identify Keyboard events.
 	var show : NSNotification.Name = UIResponder.keyboardDidShowNotification
 	var hide : NSNotification.Name = UIResponder.keyboardDidHideNotification
+	
 	// Saves original size of main view.
 	var originalViewHeight : CGRect = CGRect()
 	var database = Firestore.firestore()
+	var subscriber : AnyCancellable?
 	
 	/// Holds chat messages that will display within tableview
 	/// - Important: This property calls `createSnapShot` everytime it is updated.
-	var chats : [Chats] = []{
-		didSet {
-			createSnapShot(with: chats)
-		}
-	}
-	
+	var chats : [Chats] = []
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		aestheticsBundle()
+		createDataSource()
+	}
+	
+	func aestheticsBundle(){
 		addKeyboardObservers(with: show)
 		addKeyboardObservers(with: hide)
 		setBackgroundImage()
 		setMessageField()
 		setSendButton()
-		createDataSource()
 		originalViewHeight = view.frame
+//		tableView.keyboardDismissMode = .onDrag
 	}
 	
-	/// Sets aesthetic look for background.
-	func setBackgroundImage(){
-		backgroundImage.image = UIImage(named: Keys.Images.viewMainBackgroundImage)
-		backgroundImage.contentMode = .scaleAspectFill
+	//MARK: - TableView DataSource & Delegate Methods
+	
+	func createDataSource(){
+		dataSource = UITableViewDiffableDataSource<Sections,Chats>(tableView: tableView, cellProvider: { (tableView, indexPath, chats) -> UITableViewCell? in
+			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath)
+			cell.textLabel?.text = chats.message
+			return cell
+		})
+	}
+
+	func createSnapShot(with chat: [Chats]){
+		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
+		snapShot.appendSections([.main])
+		snapShot.appendItems(chat, toSection: .main)
+		dataSource.apply(snapShot, animatingDifferences: true, completion: nil)
 	}
 	
-	/// Sets aesthethic look for `messageField`
-	func setMessageField(){
-		messageField.layer.cornerRadius = 5
-		messageField.backgroundColor = .white
-	}
-	
-	/// Sets aesthethic look for `sendButton`
-	func setSendButton(){
-		sendButton.layer.cornerRadius = 10
-	}
-	
-	func addKeyboardObservers(with name: NSNotification.Name){
-		NotificationCenter.default.addObserver(self, selector: #selector(resizeViewWithKeyboardSize(_:)), name: name, object: nil)
-	}
-	
-	func removeKeyboardObservers(with name: NSNotification.Name){
-		NotificationCenter.default.removeObserver(self, name: name, object: nil)
-	}
-	
-	@objc func resizeViewWithKeyboardSize(_ notification: Notification){
-		let name = notification.name
-		
-		switch name {
-		case show:
-			let keyboardRawSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-			let keybaordFrame = keyboardRawSize?.cgRectValue
-			guard let keyboardHeight = keybaordFrame?.height else {return}
-			let difference = (keyboardHeight / 2 ) + messageField.frame.height
-			//view.frame.size.height = difference
-			moveTextBoxAndSendButton(amount: difference)
-		default:
-			//view.frame.size.height = self.originalViewHeight.height
-			UIView.animate(withDuration: 0.2) {
-				self.communicationStack.transform = .identity
-			}
-		}
-	}
-	
-	func moveTextBoxAndSendButton(amount:CGFloat){
-		UIView.animate(withDuration: 0.2, animations: {
-			self.communicationStack.transform = CGAffineTransform(translationX: 0, y: (amount * -1))
-			self.loadViewIfNeeded()
-		}, completion: nil)
-		
-	}
-	
-	//MARK: IBActions
+}
+
+//MARK: - Firestore Methods & Actions
+
+extension ChatViewController {
 	
 	@IBAction func sendButtonTapped(_ sender: Any) {
 		guard let messageBody = messageField.text else {return}
 		guard let users = Auth.auth().currentUser else {return}
-		
-		let message = Chats(user: users.email!, message: messageBody, identifer: users.uid)
+		guard let email = users.email else {return}
 		
 		let collection = database.collection(Keys.FireBaseKeys.collection)
 		collection.addDocument(data: [
-			"Sender": message.user,
-			"MessageBody": message.message,
+			Keys.FireBaseKeys.sender : email,
+			Keys.FireBaseKeys.messageBody : messageBody,
+			Keys.FireBaseKeys.uniqueID : users.uid,
 		]) { (error) in
 			guard let error = error else {return}
 			print(error.localizedDescription)
 		}
-		
-		print(message)
+		createFireStoreServerObserver()
 		messageField.text = nil
 	}
 	
+	func createFireStoreServerObserver(){
+		subscriber = Future<QuerySnapshot,Error> { [weak self](promise) in
+			self?.database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+				if let error = error {
+					promise(.failure(error))
+					print(error.localizedDescription)
+				}
+				if let snapshot = snapshot {
+					promise(.success(snapshot))
+				}
+			}
+		}
+		.eraseToAnyPublisher()
+		.sink(receiveCompletion: { (errorHandler) in
+			switch errorHandler {
+			case .failure(let error):
+				print(error.localizedDescription)
+			case .finished:
+				break
+			}
+		}, receiveValue: { [weak self] (incomingSnapshot) in
+			self?.retrieveDataFromDatabase(with: incomingSnapshot)
+		})
+	}
+	
+	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
+		let snapshot = snapshot.documents
+		self.chats.removeAll()
+		snapshot.forEach({
+			let snapshot = $0.data()
+			self.chats.append(Chats(
+				user: snapshot[Keys.FireBaseKeys.sender] as! String,
+				message: snapshot[Keys.FireBaseKeys.messageBody] as! String,
+				userIdentifier: snapshot[Keys.FireBaseKeys.uniqueID] as? String
+				))
+		})
+		createSnapShot(with: chats)
+	}
+		
 	@IBAction func logoutButton(_ sender: Any) {
 		let firebaseAuth = Auth.auth()
 		
@@ -140,21 +149,6 @@ class ChatViewController: UIViewController {
 		removeKeyboardObservers(with: hide)
 		performSegue(withIdentifier: Keys.Segues.homeFromChatWindow, sender: nil)
 	}
-	
-	//MARK: - TableView DataSource & Delegate Methods
-	
-	func createDataSource(){
-		dataSource = UITableViewDiffableDataSource<Sections,Chats>(tableView: tableView, cellProvider: { (tableView, indexPath, chats) -> UITableViewCell? in
-			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath) as! ChatsTableViewCell
-			
-			return cell
-		})
-	}
-	
-	func createSnapShot(with chat: [Chats]){
-		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
-		snapShot.appendSections([.main])
-		snapShot.appendItems(chat, toSection: .main)
-		dataSource.apply(snapShot, animatingDifferences: true, completion: nil)
-	}
 }
+
+

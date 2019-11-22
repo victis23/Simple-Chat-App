@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D21665623876AA900865549 /* ExtensionKeyboardChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D21665523876AA900865549 /* ExtensionKeyboardChatViewController.swift */; };
+		7D21665823876CDB00865549 /* ExtensionAestheticsChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D21665723876CDB00865549 /* ExtensionAestheticsChatViewController.swift */; };
 		7D278B8E2380B2BF00433A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278B8D2380B2BF00433A7C /* AppDelegate.swift */; };
 		7D278B902380B2BF00433A7C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */; };
 		7D278B922380B2BF00433A7C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278B912380B2BF00433A7C /* ViewController.swift */; };
@@ -23,8 +25,6 @@
 		7D6BA68423816B5800EDE983 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6BA68323816B5800EDE983 /* Keys.swift */; };
 		7D6BA68623817D3400EDE983 /* ChatWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */; };
 		7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2B238180290079D39E /* ChatViewController.swift */; };
-		7DDB1A30238180A90079D39E /* ChatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2E238180A90079D39E /* ChatsTableViewCell.swift */; };
-		7DDB1A31238180A90079D39E /* ChatsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */; };
 		7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */; };
 		7DDB1A352381C2280079D39E /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDB1A342381C2280079D39E /* AuthenticationServices.framework */; };
 		7DDB1A382381D9290079D39E /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A372381D9290079D39E /* Chats.swift */; };
@@ -51,6 +51,8 @@
 /* Begin PBXFileReference section */
 		41367A3B75F1FA2D8CEC354A /* Pods-BasicChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasicChatApp.release.xcconfig"; path = "Target Support Files/Pods-BasicChatApp/Pods-BasicChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		7C10872E17BE89EEEF5286F7 /* Pods_BasicChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BasicChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D21665523876AA900865549 /* ExtensionKeyboardChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionKeyboardChatViewController.swift; sourceTree = "<group>"; };
+		7D21665723876CDB00865549 /* ExtensionAestheticsChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionAestheticsChatViewController.swift; sourceTree = "<group>"; };
 		7D278B8A2380B2BF00433A7C /* Simple Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D278B8D2380B2BF00433A7C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D278B8F2380B2BF00433A7C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,8 +76,6 @@
 		7D6BA68323816B5800EDE983 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChatWindow.storyboard; sourceTree = "<group>"; };
 		7DDB1A2B238180290079D39E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		7DDB1A2E238180A90079D39E /* ChatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsTableViewCell.swift; sourceTree = "<group>"; };
-		7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatsTableViewCell.xib; sourceTree = "<group>"; };
 		7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordHandlerModel.swift; sourceTree = "<group>"; };
 		7DDB1A342381C2280079D39E /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		7DDB1A372381D9290079D39E /* Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
@@ -188,6 +188,8 @@
 				7D278B912380B2BF00433A7C /* ViewController.swift */,
 				7D278BC32380D1AE00433A7C /* AccessViewController.swift */,
 				7DDB1A2B238180290079D39E /* ChatViewController.swift */,
+				7D21665723876CDB00865549 /* ExtensionAestheticsChatViewController.swift */,
+				7D21665523876AA900865549 /* ExtensionKeyboardChatViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -195,8 +197,6 @@
 		7DDB1A2D238180730079D39E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7DDB1A2E238180A90079D39E /* ChatsTableViewCell.swift */,
-				7DDB1A2F238180A90079D39E /* ChatsTableViewCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -329,7 +329,6 @@
 				7D6BA68623817D3400EDE983 /* ChatWindow.storyboard in Resources */,
 				7D278B9A2380B2C000433A7C /* Assets.xcassets in Resources */,
 				7D278B952380B2BF00433A7C /* Main.storyboard in Resources */,
-				7DDB1A31238180A90079D39E /* ChatsTableViewCell.xib in Resources */,
 				7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */,
 				7D5B19772380DBB700527944 /* GoogleService-Info.plist in Resources */,
 			);
@@ -399,15 +398,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D278B982380B2BF00433A7C /* BasicChatApp.xcdatamodeld in Sources */,
-				7DDB1A30238180A90079D39E /* ChatsTableViewCell.swift in Sources */,
 				7D6BA68423816B5800EDE983 /* Keys.swift in Sources */,
 				7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */,
 				7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */,
 				7D278B922380B2BF00433A7C /* ViewController.swift in Sources */,
+				7D21665623876AA900865549 /* ExtensionKeyboardChatViewController.swift in Sources */,
 				7D278B8E2380B2BF00433A7C /* AppDelegate.swift in Sources */,
 				7DDB1A382381D9290079D39E /* Chats.swift in Sources */,
 				7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */,
 				7D278B902380B2BF00433A7C /* SceneDelegate.swift in Sources */,
+				7D21665823876CDB00865549 /* ExtensionAestheticsChatViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

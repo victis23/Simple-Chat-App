@@ -23,5 +23,9 @@ struct Keys {
 	}
 	struct FireBaseKeys {
 		static var collection = "messages"
+		static var sender = "Sender"
+		static var messageBody = "MessageBody"
+		static var uniqueID = "UniqueId"
+		static var uuid = "uuid"
 	}
 }

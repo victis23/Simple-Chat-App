@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import BasicChatApp
 
 class BasicChatAppUITests: XCTestCase {
 

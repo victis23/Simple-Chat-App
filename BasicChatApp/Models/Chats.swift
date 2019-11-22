@@ -11,9 +11,10 @@ import Foundation
 struct Chats : Hashable {
 	var user : String
 	var message: String
-	var identifer :String
+	var userIdentifier :String?
+	let identifier = UUID()
 	
 	func hash(into hasher: inout Hasher){
-		hasher.combine(identifer)
+		hasher.combine(identifier)
 	}
 }
