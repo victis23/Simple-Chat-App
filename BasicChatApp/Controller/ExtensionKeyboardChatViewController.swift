@@ -32,7 +32,7 @@ extension ChatViewController {
 			moveTextBoxAndSendButton(amount: difference)
 		default:
 			UIView.animate(withDuration: 0.2) {
-				self.tableView.frame.size.height = self.tableView.frame.height + 230
+				self.tableView.frame.size.height = self.originalTableViewFrame.height //self.tableView.frame.height + 230
 				self.communicationStack.transform = .identity
 			}
 			

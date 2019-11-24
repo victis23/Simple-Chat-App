@@ -27,5 +27,6 @@ struct Keys {
 		static var messageBody = "MessageBody"
 		static var uniqueID = "UniqueId"
 		static var uuid = "uuid"
+		static var timeStamp = "timeStamp"
 	}
 }

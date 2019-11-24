@@ -33,9 +33,10 @@ class ChatViewController: UIViewController, ObservableObject {
 	var hide : NSNotification.Name = UIResponder.keyboardDidHideNotification
 	
 	// Saves original size of main view.
-	var originalViewHeight : CGRect = CGRect()
+	var originalTableViewFrame : CGRect = CGRect()
 	var database = Firestore.firestore()
 	var subscriber : AnyCancellable?
+	var future : AnyPublisher<QuerySnapshot,Error>!
 	
 	/// Holds chat messages that will display within tableview
 	/// - Important: This property calls `createSnapShot` everytime it is updated.
@@ -48,12 +49,12 @@ class ChatViewController: UIViewController, ObservableObject {
 	}
 	
 	func aestheticsBundle(){
+		originalTableViewFrame = tableView.frame
 		addKeyboardObservers(with: show)
 		addKeyboardObservers(with: hide)
 		setBackgroundImage()
 		setMessageField()
 		setSendButton()
-		originalViewHeight = view.frame
 //		tableView.keyboardDismissMode = .onDrag
 	}
 	
@@ -63,6 +64,7 @@ class ChatViewController: UIViewController, ObservableObject {
 		dataSource = UITableViewDiffableDataSource<Sections,Chats>(tableView: tableView, cellProvider: { (tableView, indexPath, chats) -> UITableViewCell? in
 			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath)
 			cell.textLabel?.text = chats.message
+			cell.textLabel?.textColor = .white
 			return cell
 		})
 	}
@@ -71,7 +73,7 @@ class ChatViewController: UIViewController, ObservableObject {
 		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
 		snapShot.appendSections([.main])
 		snapShot.appendItems(chat, toSection: .main)
-		dataSource.apply(snapShot, animatingDifferences: true, completion: nil)
+		dataSource.apply(snapShot, animatingDifferences: false, completion: nil)
 	}
 	
 }
@@ -85,11 +87,17 @@ extension ChatViewController {
 		guard let users = Auth.auth().currentUser else {return}
 		guard let email = users.email else {return}
 		
+		let formatter = DateFormatter()
+		formatter.dateStyle = .short
+		formatter.timeStyle = .long
+		let timeStamp = formatter.string(from: Date())
+		
 		let collection = database.collection(Keys.FireBaseKeys.collection)
 		collection.addDocument(data: [
 			Keys.FireBaseKeys.sender : email,
 			Keys.FireBaseKeys.messageBody : messageBody,
 			Keys.FireBaseKeys.uniqueID : users.uid,
+			Keys.FireBaseKeys.timeStamp : timeStamp
 		]) { (error) in
 			guard let error = error else {return}
 			print(error.localizedDescription)
@@ -99,7 +107,7 @@ extension ChatViewController {
 	}
 	
 	func createFireStoreServerObserver(){
-		subscriber = Future<QuerySnapshot,Error> { [weak self](promise) in
+		future = Future<QuerySnapshot,Error> { [weak self](promise) in
 			self?.database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
 				if let error = error {
 					promise(.failure(error))
@@ -107,20 +115,24 @@ extension ChatViewController {
 				}
 				if let snapshot = snapshot {
 					promise(.success(snapshot))
+					self?.getUpdates()
 				}
 			}
 		}
 		.eraseToAnyPublisher()
-		.sink(receiveCompletion: { (errorHandler) in
-			switch errorHandler {
-			case .failure(let error):
-				print(error.localizedDescription)
+	}
+	
+	func getUpdates(){
+		subscriber = future.sink(receiveCompletion: { (completionError) in
+			switch completionError {
+			case .failure(let internalError):
+				print(internalError.localizedDescription)
 			case .finished:
 				break
 			}
-		}, receiveValue: { [weak self] (incomingSnapshot) in
+		}, receiveValue: { [weak self](incomingSnapshot) in
 			self?.retrieveDataFromDatabase(with: incomingSnapshot)
-		})
+			})
 	}
 	
 	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
@@ -131,10 +143,14 @@ extension ChatViewController {
 			self.chats.append(Chats(
 				user: snapshot[Keys.FireBaseKeys.sender] as! String,
 				message: snapshot[Keys.FireBaseKeys.messageBody] as! String,
-				userIdentifier: snapshot[Keys.FireBaseKeys.uniqueID] as? String
+				userIdentifier: snapshot[Keys.FireBaseKeys.uniqueID] as? String,
+				timeStamp: snapshot[Keys.FireBaseKeys.timeStamp] as! String
 				))
 		})
-		createSnapShot(with: chats)
+		let sortedChates = chats.sorted { (value1, value2) -> Bool in
+			value1.timeStamp < value2.timeStamp
+		}
+		createSnapShot(with: sortedChates)
 	}
 		
 	@IBAction func logoutButton(_ sender: Any) {

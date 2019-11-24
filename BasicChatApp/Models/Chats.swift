@@ -12,6 +12,7 @@ struct Chats : Hashable {
 	var user : String
 	var message: String
 	var userIdentifier :String?
+	var timeStamp : String
 	let identifier = UUID()
 	
 	func hash(into hasher: inout Hasher){

@@ -32,7 +32,14 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setView()
-		
+		// Placeholder Method
+		setDefaultUserInfo()
+	}
+	
+	// FIXME: - Remove On Build
+	func setDefaultUserInfo(){
+		userNameTextField.text = "victisgoth@gmail.com"
+		passwordTextField.text = "jd5ut7hp"
 	}
 	
 	// MARK: Class Methods
