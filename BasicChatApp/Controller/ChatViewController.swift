@@ -31,6 +31,9 @@ class ChatViewController: UIViewController, ObservableObject {
 	// Names used to identify Keyboard events.
 	var show : NSNotification.Name = UIResponder.keyboardDidShowNotification
 	var hide : NSNotification.Name = UIResponder.keyboardDidHideNotification
+	let shrink : NSNotification.Name = NSNotification.Name(rawValue: "shrink")
+	var shrinkSubscriber : AnyCancellable?
+	var shrinkCounter = 0
 	
 	// Saves original size of main view.
 	var originalTableViewFrame : CGRect = CGRect()
@@ -46,16 +49,18 @@ class ChatViewController: UIViewController, ObservableObject {
 		super.viewDidLoad()
 		aestheticsBundle()
 		createDataSource()
+		createFireStoreServerObserver()
 	}
 	
 	func aestheticsBundle(){
 		originalTableViewFrame = tableView.frame
 		addKeyboardObservers(with: show)
 		addKeyboardObservers(with: hide)
+		addShrinkTableViewFrameObserver()
 		setBackgroundImage()
 		setMessageField()
 		setSendButton()
-//		tableView.keyboardDismissMode = .onDrag
+		//		tableView.keyboardDismissMode = .onDrag
 	}
 	
 	//MARK: - TableView DataSource & Delegate Methods
@@ -65,17 +70,20 @@ class ChatViewController: UIViewController, ObservableObject {
 			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath)
 			cell.textLabel?.text = chats.message
 			cell.textLabel?.textColor = .white
+			NotificationCenter.default.post(name: self.shrink, object: nil)
 			return cell
 		})
+		
 	}
-
+	
 	func createSnapShot(with chat: [Chats]){
 		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
 		snapShot.appendSections([.main])
 		snapShot.appendItems(chat, toSection: .main)
-		dataSource.apply(snapShot, animatingDifferences: false, completion: nil)
+		dataSource.apply(snapShot, animatingDifferences: false) {
+			self.shrinkCounter += 1
+		}
 	}
-	
 }
 
 //MARK: - Firestore Methods & Actions
@@ -83,6 +91,7 @@ class ChatViewController: UIViewController, ObservableObject {
 extension ChatViewController {
 	
 	@IBAction func sendButtonTapped(_ sender: Any) {
+		
 		guard let messageBody = messageField.text else {return}
 		guard let users = Auth.auth().currentUser else {return}
 		guard let email = users.email else {return}
@@ -132,7 +141,7 @@ extension ChatViewController {
 			}
 		}, receiveValue: { [weak self](incomingSnapshot) in
 			self?.retrieveDataFromDatabase(with: incomingSnapshot)
-			})
+		})
 	}
 	
 	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
@@ -145,14 +154,15 @@ extension ChatViewController {
 				message: snapshot[Keys.FireBaseKeys.messageBody] as! String,
 				userIdentifier: snapshot[Keys.FireBaseKeys.uniqueID] as? String,
 				timeStamp: snapshot[Keys.FireBaseKeys.timeStamp] as! String
-				))
+			))
 		})
 		let sortedChates = chats.sorted { (value1, value2) -> Bool in
 			value1.timeStamp < value2.timeStamp
 		}
 		createSnapShot(with: sortedChates)
+		subscriber?.cancel()
 	}
-		
+	
 	@IBAction func logoutButton(_ sender: Any) {
 		let firebaseAuth = Auth.auth()
 		

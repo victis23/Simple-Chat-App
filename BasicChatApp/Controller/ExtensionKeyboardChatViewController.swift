@@ -20,9 +20,19 @@ extension ChatViewController {
 		NotificationCenter.default.removeObserver(self, name: name, object: nil)
 	}
 	
+	func addShrinkTableViewFrameObserver() {
+		
+		shrinkSubscriber = NotificationCenter.default.publisher(for: shrink)
+			.sink { (notification) in
+				if self.shrinkCounter == 1 {
+					self.shrinkCounter = 0
+					self.tableView.frame.size.height = (self.tableView.frame.height - 230) 
+				}
+		}
+	}
+	
 	@objc func resizeViewWithKeyboardSize(_ notification: Notification){
 		let name = notification.name
-		
 		switch name {
 		case show:
 			let keyboardRawSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
@@ -32,7 +42,7 @@ extension ChatViewController {
 			moveTextBoxAndSendButton(amount: difference)
 		default:
 			UIView.animate(withDuration: 0.2) {
-				self.tableView.frame.size.height = self.originalTableViewFrame.height //self.tableView.frame.height + 230
+				self.tableView.frame.size.height = self.originalTableViewFrame.height
 				self.communicationStack.transform = .identity
 			}
 			
