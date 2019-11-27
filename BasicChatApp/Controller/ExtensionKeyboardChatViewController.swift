@@ -10,6 +10,7 @@ import UIKit
 
 //MARK: - Keyboard Handling Methods
 
+/*
 extension ChatViewController {
 	
 	func addKeyboardObservers(with name: NSNotification.Name){
@@ -26,7 +27,10 @@ extension ChatViewController {
 			.sink { (notification) in
 				if self.shrinkCounter == 1 {
 					self.shrinkCounter = 0
-					self.tableView.frame.size.height = (self.tableView.frame.height - 230) 
+					self.tableView.frame.size.height = (self.tableView.frame.height - 230)
+					
+					self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: false)
+					
 				}
 		}
 	}
@@ -58,3 +62,4 @@ extension ChatViewController {
 		
 	}
 }
+*/

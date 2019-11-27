@@ -11,7 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import Combine
 
-class ChatViewController: UIViewController, ObservableObject {
+class ChatViewController: UIViewController, ObservableObject, UITableViewDelegate {
 	
 	enum Sections {
 		case main
@@ -38,8 +38,9 @@ class ChatViewController: UIViewController, ObservableObject {
 	// Saves original size of main view.
 	var originalTableViewFrame : CGRect = CGRect()
 	var database = Firestore.firestore()
-	var subscriber : AnyCancellable?
-	var future : AnyPublisher<QuerySnapshot,Error>!
+	var subscriber : QuerySnapshot!
+	var passthru : PassthroughSubject<QuerySnapshot,Error>!
+//	var future : AnyPublisher<QuerySnapshot,Error>!
 	
 	/// Holds chat messages that will display within tableview
 	/// - Important: This property calls `createSnapShot` everytime it is updated.
@@ -50,13 +51,14 @@ class ChatViewController: UIViewController, ObservableObject {
 		aestheticsBundle()
 		createDataSource()
 		createFireStoreServerObserver()
+		tableView.delegate = self
 	}
 	
 	func aestheticsBundle(){
 		originalTableViewFrame = tableView.frame
-		addKeyboardObservers(with: show)
-		addKeyboardObservers(with: hide)
-		addShrinkTableViewFrameObserver()
+		//		addKeyboardObservers(with: show)
+		//		addKeyboardObservers(with: hide)
+		//		addShrinkTableViewFrameObserver()
 		setBackgroundImage()
 		setMessageField()
 		setSendButton()
@@ -67,10 +69,23 @@ class ChatViewController: UIViewController, ObservableObject {
 	
 	func createDataSource(){
 		dataSource = UITableViewDiffableDataSource<Sections,Chats>(tableView: tableView, cellProvider: { (tableView, indexPath, chats) -> UITableViewCell? in
+			
+			guard let currentSender = Auth.auth().currentUser else {fatalError()}
+			
 			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath)
-			cell.textLabel?.text = chats.message
-			cell.textLabel?.textColor = .white
-			NotificationCenter.default.post(name: self.shrink, object: nil)
+			cell.detailTextLabel?.text = chats.message
+			cell.textLabel?.text = chats.user
+			
+			[cell.textLabel, cell.detailTextLabel].forEach({
+				$0?.textColor = .white
+			})
+			
+			if chats.user != currentSender.email {
+				[cell.textLabel, cell.detailTextLabel].forEach({
+					$0?.textColor = .black
+				})
+			}
+			//			NotificationCenter.default.post(name: self.shrink, object: nil)
 			return cell
 		})
 		
@@ -81,8 +96,14 @@ class ChatViewController: UIViewController, ObservableObject {
 		snapShot.appendSections([.main])
 		snapShot.appendItems(chat, toSection: .main)
 		dataSource.apply(snapShot, animatingDifferences: false) {
-			self.shrinkCounter += 1
+			if self.chats.count > 0 {
+				self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: true)
+			}
 		}
+	}
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 }
 
@@ -115,6 +136,26 @@ extension ChatViewController {
 		messageField.text = nil
 	}
 	
+		func createFireStoreServerObserver(){
+			database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+				guard let snapshot = snapshot else {return}
+				self.passthru.send(snapshot)
+				self.passthru
+					.map { (snapShot) -> QuerySnapshot in
+						snapShot
+				}
+			.sink(receiveCompletion: <#T##((Subscribers.Completion<Error>) -> Void)##((Subscribers.Completion<Error>) -> Void)##(Subscribers.Completion<Error>) -> Void#>, receiveValue: <#T##((QuerySnapshot) -> Void)##((QuerySnapshot) -> Void)##(QuerySnapshot) -> Void#>)
+//				self.retrieveDataFromDatabase(with: snapshot)
+			}
+		}
+	
+	
+
+	
+	/*
 	func createFireStoreServerObserver(){
 		future = Future<QuerySnapshot,Error> { [weak self](promise) in
 			self?.database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
@@ -143,6 +184,8 @@ extension ChatViewController {
 			self?.retrieveDataFromDatabase(with: incomingSnapshot)
 		})
 	}
+	*/
+	
 	
 	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
 		let snapshot = snapshot.documents
@@ -164,15 +207,15 @@ extension ChatViewController {
 	}
 	
 	@IBAction func logoutButton(_ sender: Any) {
-		let firebaseAuth = Auth.auth()
 		
+		let firebaseAuth = Auth.auth()
 		do {
 			try firebaseAuth.signOut()
 		} catch (let error) {
 			print(error.localizedDescription)
 		}
-		removeKeyboardObservers(with: show)
-		removeKeyboardObservers(with: hide)
+		//		removeKeyboardObservers(with: show)
+		//		removeKeyboardObservers(with: hide)
 		performSegue(withIdentifier: Keys.Segues.homeFromChatWindow, sender: nil)
 	}
 }
