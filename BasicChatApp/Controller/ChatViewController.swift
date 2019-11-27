@@ -27,42 +27,31 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	
 	// DataSource
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
-	
-	// Names used to identify Keyboard events.
-	var show : NSNotification.Name = UIResponder.keyboardDidShowNotification
-	var hide : NSNotification.Name = UIResponder.keyboardDidHideNotification
-	let shrink : NSNotification.Name = NSNotification.Name(rawValue: "shrink")
-	var shrinkSubscriber : AnyCancellable?
-	var shrinkCounter = 0
-	
-	// Saves original size of main view.
-	var originalTableViewFrame : CGRect = CGRect()
+	var publicSubscriber : AnyCancellable?
+
 	var database = Firestore.firestore()
-	var subscriber : QuerySnapshot!
-	var passthru : PassthroughSubject<QuerySnapshot,Error>!
-//	var future : AnyPublisher<QuerySnapshot,Error>!
+	
+	// Combine Properties
+	var subscriber : AnyCancellable?
+	@Published var dataBaseSnapShot : QuerySnapshot!
+	var future : AnyPublisher<QuerySnapshot,Never>!
 	
 	/// Holds chat messages that will display within tableview
-	/// - Important: This property calls `createSnapShot` everytime it is updated.
 	var chats : [Chats] = []
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		aestheticsBundle()
 		createDataSource()
+		getValuesFromSubscriber()
 		createFireStoreServerObserver()
 		tableView.delegate = self
 	}
 	
 	func aestheticsBundle(){
-		originalTableViewFrame = tableView.frame
-		//		addKeyboardObservers(with: show)
-		//		addKeyboardObservers(with: hide)
-		//		addShrinkTableViewFrameObserver()
 		setBackgroundImage()
 		setMessageField()
 		setSendButton()
-		//		tableView.keyboardDismissMode = .onDrag
 	}
 	
 	//MARK: - TableView DataSource & Delegate Methods
@@ -85,7 +74,7 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 					$0?.textColor = .black
 				})
 			}
-			//			NotificationCenter.default.post(name: self.shrink, object: nil)
+			
 			return cell
 		})
 		
@@ -95,6 +84,7 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
 		snapShot.appendSections([.main])
 		snapShot.appendItems(chat, toSection: .main)
+		
 		dataSource.apply(snapShot, animatingDifferences: false) {
 			if self.chats.count > 0 {
 				self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: true)
@@ -132,60 +122,48 @@ extension ChatViewController {
 			guard let error = error else {return}
 			print(error.localizedDescription)
 		}
-		createFireStoreServerObserver()
 		messageField.text = nil
 	}
 	
-		func createFireStoreServerObserver(){
-			database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
-				if let error = error {
-					print(error.localizedDescription)
-				}
-				guard let snapshot = snapshot else {return}
-				self.passthru.send(snapshot)
-				self.passthru
-					.map { (snapShot) -> QuerySnapshot in
-						snapShot
-				}
-			.sink(receiveCompletion: <#T##((Subscribers.Completion<Error>) -> Void)##((Subscribers.Completion<Error>) -> Void)##(Subscribers.Completion<Error>) -> Void#>, receiveValue: <#T##((QuerySnapshot) -> Void)##((QuerySnapshot) -> Void)##(QuerySnapshot) -> Void#>)
-//				self.retrieveDataFromDatabase(with: snapshot)
+	
+	
+	func createFireStoreServerObserver(){
+		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+			if let error = error {
+				print(error.localizedDescription)
 			}
+			guard let snapshot = snapshot else {return}
+			
+			self.future = Just(snapshot)
+				.eraseToAnyPublisher()
+			
+			self.subscriber = self.future
+				.sink(receiveValue: { (snap) in
+					self.dataBaseSnapShot = snap
+				})
 		}
+	}
 	
+	func getValuesFromSubscriber(){
+		publicSubscriber = $dataBaseSnapShot
+			.sink { (capturedSnapShotValue) in
+				guard let capturedSnapShotValue = capturedSnapShotValue else {return}
+				self.retrieveDataFromDatabase(with: capturedSnapShotValue)
+		}
+	}
 	
-
-	
+	// Simple Method without using combine framework.
 	/*
 	func createFireStoreServerObserver(){
-		future = Future<QuerySnapshot,Error> { [weak self](promise) in
-			self?.database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
-				if let error = error {
-					promise(.failure(error))
-					print(error.localizedDescription)
-				}
-				if let snapshot = snapshot {
-					promise(.success(snapshot))
-					self?.getUpdates()
-				}
+		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+			if let error = error {
+				print(error.localizedDescription)
 			}
+			guard let snapshot = snapshot else {return}
+			self.retrieveDataFromDatabase(with: snapshot)
 		}
-		.eraseToAnyPublisher()
-	}
-	
-	func getUpdates(){
-		subscriber = future.sink(receiveCompletion: { (completionError) in
-			switch completionError {
-			case .failure(let internalError):
-				print(internalError.localizedDescription)
-			case .finished:
-				break
-			}
-		}, receiveValue: { [weak self](incomingSnapshot) in
-			self?.retrieveDataFromDatabase(with: incomingSnapshot)
-		})
 	}
 	*/
-	
 	
 	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
 		let snapshot = snapshot.documents
@@ -203,7 +181,6 @@ extension ChatViewController {
 			value1.timeStamp < value2.timeStamp
 		}
 		createSnapShot(with: sortedChates)
-		subscriber?.cancel()
 	}
 	
 	@IBAction func logoutButton(_ sender: Any) {
@@ -214,8 +191,6 @@ extension ChatViewController {
 		} catch (let error) {
 			print(error.localizedDescription)
 		}
-		//		removeKeyboardObservers(with: show)
-		//		removeKeyboardObservers(with: hide)
 		performSegue(withIdentifier: Keys.Segues.homeFromChatWindow, sender: nil)
 	}
 }
