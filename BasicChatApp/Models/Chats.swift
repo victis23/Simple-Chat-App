@@ -13,7 +13,13 @@ struct Chats : Hashable {
 	var message: String
 	var userIdentifier :String?
 	var timeStamp : String
-	let identifier = UUID()
+	
+	var identifier : UUID {
+		guard let userIdentifier = userIdentifier else {fatalError()}
+		let id = UUID(uuidString: userIdentifier)
+		guard let userID = id else {return UUID()}
+		return userID
+	}
 	
 	func hash(into hasher: inout Hasher){
 		hasher.combine(identifier)

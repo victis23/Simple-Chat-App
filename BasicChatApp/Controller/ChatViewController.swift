@@ -28,7 +28,7 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	// DataSource
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
 	var publicSubscriber : AnyCancellable?
-
+	
 	var database = Firestore.firestore()
 	
 	// Combine Properties
@@ -53,6 +53,139 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 		setMessageField()
 		setSendButton()
 	}
+}
+
+//MARK: - Firestore Methods & Actions
+
+extension ChatViewController {
+	
+	@IBAction func sendButtonTapped(_ sender: Any) {
+		
+		struct UuidCreator {
+			let identifier = UUID()
+		}
+		
+		guard let messageBody = messageField.text else {return}
+		guard let users = Auth.auth().currentUser else {return}
+		guard let email = users.email else {return}
+		
+		// Creates the UUID that will be used for updated our diffable data source.
+		let tempObjectIDCreator = UuidCreator()
+		let stringID = "\(tempObjectIDCreator.identifier)"
+		
+		let formatter = DateFormatter()
+		formatter.dateStyle = .short
+		formatter.timeStyle = .long
+		let timeStamp = formatter.string(from: Date())
+		
+		createDocument(user: email, userId: stringID, messageBody: messageBody, timeStamp: timeStamp)
+		
+		messageField.text = nil
+	}
+	
+	//MARK: Create FireStore Document
+	func createDocument(user email: String, userId: String, messageBody:String, timeStamp:String){
+		
+		let collection = database.collection(Keys.FireBaseKeys.collection)
+		collection.addDocument(data: [
+			Keys.FireBaseKeys.sender : email,
+			Keys.FireBaseKeys.messageBody : messageBody,
+			Keys.FireBaseKeys.uniqueID : userId,
+			Keys.FireBaseKeys.timeStamp : timeStamp
+		]) { (error) in
+			guard let error = error else {return}
+			print(error.localizedDescription)
+		}
+	}
+	
+	// MARK: Create FireStore Observer
+	func createFireStoreServerObserver(){
+		
+		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			
+			guard let snapshot = snapshot else {return}
+			
+			self.future = Just(snapshot)
+				.eraseToAnyPublisher()
+			
+			self.subscriber = self.future
+				.sink(receiveValue: { (snap) in
+					self.dataBaseSnapShot = snap
+				})
+		}
+	}
+	
+	func getValuesFromSubscriber(){
+		
+		publicSubscriber = $dataBaseSnapShot
+			.sink { (capturedSnapShotValue) in
+				guard let capturedSnapShotValue = capturedSnapShotValue else {return}
+				self.retrieveDataFromDatabase(with: capturedSnapShotValue)
+		}
+	}
+	
+	// Simple Method without using combine framework.
+	/*
+	func createFireStoreServerObserver(){
+	database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
+	if let error = error {
+	print(error.localizedDescription)
+	}
+	guard let snapshot = snapshot else {return}
+	self.retrieveDataFromDatabase(with: snapshot)
+	}
+	}
+	*/
+	
+	//MARK: Retrieve Values from FireStore Database
+	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
+		
+		let dbSnapShot = snapshot.documents
+		
+		//		self.chats.removeAll()
+		var removeDuplicates : Set<Chats> = []
+		
+		dbSnapShot.forEach({
+			let databaseData = $0.data()
+			//			self.chats.append(Chats(
+			//				user: databaseData[Keys.FireBaseKeys.sender] as! String,
+			//				message: databaseData[Keys.FireBaseKeys.messageBody] as! String,
+			//				userIdentifier: databaseData[Keys.FireBaseKeys.uniqueID] as? String,
+			//				timeStamp: databaseData[Keys.FireBaseKeys.timeStamp] as! String
+			//			))
+			
+			removeDuplicates.insert(Chats(
+				user: databaseData[Keys.FireBaseKeys.sender] as! String,
+				message: databaseData[Keys.FireBaseKeys.messageBody] as! String,
+				userIdentifier: databaseData[Keys.FireBaseKeys.uniqueID] as? String,
+				timeStamp: databaseData[Keys.FireBaseKeys.timeStamp] as! String
+			))
+		})
+		
+		chats = removeDuplicates.map({$0})
+		
+		/*
+		dbSnapShot.forEach({
+		let databaseData = $0.data()
+		self.chats.append(Chats(
+		user: databaseData[Keys.FireBaseKeys.sender] as! String,
+		message: databaseData[Keys.FireBaseKeys.messageBody] as! String,
+		userIdentifier: databaseData[Keys.FireBaseKeys.uniqueID] as? String,
+		timeStamp: databaseData[Keys.FireBaseKeys.timeStamp] as! String
+		))
+		})
+		*/
+		let sortedChates = chats.sorted { (value1, value2) -> Bool in
+			value1.timeStamp < value2.timeStamp
+		}
+		
+		createSnapShot(with: sortedChates)
+	}
+	
+	
 	
 	//MARK: - TableView DataSource & Delegate Methods
 	
@@ -95,102 +228,21 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
-}
-
-//MARK: - Firestore Methods & Actions
-
-extension ChatViewController {
 	
-	@IBAction func sendButtonTapped(_ sender: Any) {
-		
-		guard let messageBody = messageField.text else {return}
-		guard let users = Auth.auth().currentUser else {return}
-		guard let email = users.email else {return}
-		
-		let formatter = DateFormatter()
-		formatter.dateStyle = .short
-		formatter.timeStyle = .long
-		let timeStamp = formatter.string(from: Date())
-		
-		let collection = database.collection(Keys.FireBaseKeys.collection)
-		collection.addDocument(data: [
-			Keys.FireBaseKeys.sender : email,
-			Keys.FireBaseKeys.messageBody : messageBody,
-			Keys.FireBaseKeys.uniqueID : users.uid,
-			Keys.FireBaseKeys.timeStamp : timeStamp
-		]) { (error) in
-			guard let error = error else {return}
-			print(error.localizedDescription)
-		}
-		messageField.text = nil
-	}
-	
-	
-	
-	func createFireStoreServerObserver(){
-		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
-			if let error = error {
-				print(error.localizedDescription)
-			}
-			guard let snapshot = snapshot else {return}
-			
-			self.future = Just(snapshot)
-				.eraseToAnyPublisher()
-			
-			self.subscriber = self.future
-				.sink(receiveValue: { (snap) in
-					self.dataBaseSnapShot = snap
-				})
-		}
-	}
-	
-	func getValuesFromSubscriber(){
-		publicSubscriber = $dataBaseSnapShot
-			.sink { (capturedSnapShotValue) in
-				guard let capturedSnapShotValue = capturedSnapShotValue else {return}
-				self.retrieveDataFromDatabase(with: capturedSnapShotValue)
-		}
-	}
-	
-	// Simple Method without using combine framework.
-	/*
-	func createFireStoreServerObserver(){
-		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
-			if let error = error {
-				print(error.localizedDescription)
-			}
-			guard let snapshot = snapshot else {return}
-			self.retrieveDataFromDatabase(with: snapshot)
-		}
-	}
-	*/
-	
-	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
-		let snapshot = snapshot.documents
-		self.chats.removeAll()
-		snapshot.forEach({
-			let snapshot = $0.data()
-			self.chats.append(Chats(
-				user: snapshot[Keys.FireBaseKeys.sender] as! String,
-				message: snapshot[Keys.FireBaseKeys.messageBody] as! String,
-				userIdentifier: snapshot[Keys.FireBaseKeys.uniqueID] as? String,
-				timeStamp: snapshot[Keys.FireBaseKeys.timeStamp] as! String
-			))
-		})
-		let sortedChates = chats.sorted { (value1, value2) -> Bool in
-			value1.timeStamp < value2.timeStamp
-		}
-		createSnapShot(with: sortedChates)
-	}
-	
+	//MARK: - Navigation — Logout
 	@IBAction func logoutButton(_ sender: Any) {
 		
 		let firebaseAuth = Auth.auth()
+		
 		do {
 			try firebaseAuth.signOut()
 		} catch (let error) {
 			print(error.localizedDescription)
 		}
+		
+		// Terminates the subscription.
+		publicSubscriber?.cancel()
+		
 		performSegue(withIdentifier: Keys.Segues.homeFromChatWindow, sender: nil)
 	}
 }
