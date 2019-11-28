@@ -78,22 +78,18 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTw-mx-cKJ">
-                                <rect key="frame" x="150" y="413.5" width="114" height="30"/>
-                                <state key="normal" title="Login with Apple"/>
-                                <connections>
-                                    <action selector="loginWithAppleButtonClicked:" destination="xqe-T8-VG9" eventType="touchUpInside" id="rer-bE-sSI"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vhu-En-gl3">
+                                <rect key="frame" x="25" y="414.5" width="364" height="28"/>
+                            </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="w1W-S9-ilf">
-                                <rect key="frame" x="184" y="451.5" width="46" height="60"/>
+                                <rect key="frame" x="184" y="450.5" width="46" height="62"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gt3-xX-RRV">
+                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gt3-xX-RRV">
                                         <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ilb-K8-LXM">
-                                        <rect key="frame" x="0.0" y="30" width="46" height="30"/>
+                                        <rect key="frame" x="0.0" y="30" width="46" height="32"/>
                                         <state key="normal" title="Button"/>
                                     </button>
                                 </subviews>
@@ -105,18 +101,22 @@
                             <constraint firstItem="m9a-XA-hEc" firstAttribute="top" secondItem="ErW-WZ-kSw" secondAttribute="top" constant="20" id="1NP-Gt-7q6"/>
                             <constraint firstItem="D6s-Mm-lz3" firstAttribute="leading" secondItem="ErW-WZ-kSw" secondAttribute="leading" id="88h-Q3-LBK"/>
                             <constraint firstItem="Ye0-f9-oft" firstAttribute="centerY" secondItem="rFl-Hh-PFi" secondAttribute="centerY" constant="-226.5" id="Bjo-Ns-mY7"/>
+                            <constraint firstItem="vhu-En-gl3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ErW-WZ-kSw" secondAttribute="leading" constant="25" id="BrZ-fc-eLL"/>
                             <constraint firstItem="w1W-S9-ilf" firstAttribute="centerX" secondItem="rFl-Hh-PFi" secondAttribute="centerX" id="Cic-dI-ufm"/>
+                            <constraint firstItem="ErW-WZ-kSw" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="vhu-En-gl3" secondAttribute="trailing" constant="25" id="G9D-kj-1i8"/>
                             <constraint firstItem="ErW-WZ-kSw" firstAttribute="trailing" secondItem="m9a-XA-hEc" secondAttribute="trailing" constant="87" id="H2V-4p-oCh"/>
+                            <constraint firstItem="vhu-En-gl3" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dkv-dI-7ay" secondAttribute="bottom" constant="30" id="HH4-Me-pKS"/>
                             <constraint firstItem="m9a-XA-hEc" firstAttribute="leading" secondItem="ErW-WZ-kSw" secondAttribute="leading" constant="87" id="HWa-62-XkW"/>
-                            <constraint firstItem="VTw-mx-cKJ" firstAttribute="top" secondItem="dkv-dI-7ay" secondAttribute="bottom" constant="29" id="Kcf-XQ-SVY"/>
-                            <constraint firstItem="VTw-mx-cKJ" firstAttribute="centerX" secondItem="rFl-Hh-PFi" secondAttribute="centerX" id="Ox6-qf-j2W"/>
                             <constraint firstItem="D6s-Mm-lz3" firstAttribute="top" secondItem="rFl-Hh-PFi" secondAttribute="top" id="TMt-Ry-M57"/>
                             <constraint firstItem="Ye0-f9-oft" firstAttribute="top" secondItem="m9a-XA-hEc" secondAttribute="bottom" constant="19.5" id="UU8-rd-JfU"/>
                             <constraint firstItem="dkv-dI-7ay" firstAttribute="leading" secondItem="ErW-WZ-kSw" secondAttribute="leading" constant="20" id="XN4-yh-do0"/>
                             <constraint firstItem="Ye0-f9-oft" firstAttribute="centerX" secondItem="dkv-dI-7ay" secondAttribute="centerX" id="a11-WG-suH"/>
                             <constraint firstItem="ErW-WZ-kSw" firstAttribute="trailing" secondItem="D6s-Mm-lz3" secondAttribute="trailing" id="bC5-Sj-42Y"/>
-                            <constraint firstItem="w1W-S9-ilf" firstAttribute="top" secondItem="VTw-mx-cKJ" secondAttribute="bottom" constant="8" id="l05-kb-xzM"/>
+                            <constraint firstItem="vhu-En-gl3" firstAttribute="centerY" secondItem="rFl-Hh-PFi" secondAttribute="centerY" constant="-19.5" id="h1w-rF-QxX"/>
                             <constraint firstItem="dkv-dI-7ay" firstAttribute="top" secondItem="Ye0-f9-oft" secondAttribute="bottom" constant="17" id="nBT-Ip-vVS"/>
+                            <constraint firstItem="vhu-En-gl3" firstAttribute="centerX" secondItem="rFl-Hh-PFi" secondAttribute="centerX" id="rF6-aU-ygG"/>
+                            <constraint firstItem="w1W-S9-ilf" firstAttribute="centerY" secondItem="rFl-Hh-PFi" secondAttribute="centerY" constant="33.5" id="uli-c9-fZC"/>
+                            <constraint firstItem="w1W-S9-ilf" firstAttribute="top" secondItem="vhu-En-gl3" secondAttribute="bottom" constant="8" id="yQn-if-962"/>
                             <constraint firstAttribute="bottom" secondItem="D6s-Mm-lz3" secondAttribute="bottom" id="yrt-ar-dc6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ErW-WZ-kSw"/>
@@ -127,7 +127,7 @@
                         <outlet property="forgotPasswordButton" destination="Ilb-K8-LXM" id="pcS-h7-sl3"/>
                         <outlet property="forgotUserNameButton" destination="Gt3-xX-RRV" id="bgi-iI-3Td"/>
                         <outlet property="iconImageView" destination="m9a-XA-hEc" id="rVm-jV-p8e"/>
-                        <outlet property="loginWithAppleButton" destination="VTw-mx-cKJ" id="hYl-Sm-NlX"/>
+                        <outlet property="loginWithAppleButtonStack" destination="vhu-En-gl3" id="1TX-fi-Aq4"/>
                         <outlet property="passwordTextField" destination="TZo-Rz-XOr" id="ONZ-fa-BFd"/>
                         <outlet property="regPasswordField" destination="1Rf-Da-I89" id="Bqi-D7-uVp"/>
                         <outlet property="submitButton" destination="wV5-KD-R6m" id="EhA-d5-XLc"/>

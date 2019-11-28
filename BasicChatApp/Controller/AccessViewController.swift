@@ -10,8 +10,9 @@ import UIKit
 import AuthenticationServices
 import FirebaseFirestore
 import FirebaseAuth
+import Combine
 
-class AccessViewController: UIViewController, ASAuthorizationControllerDelegate {
+class AccessViewController: UIViewController {
 	
 	
 	@IBOutlet weak var userNameTextField: UITextField!
@@ -20,20 +21,23 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 	@IBOutlet weak var backgroundImageView: UIImageView!
 	@IBOutlet weak var iconImageView: UIImageView!
 	@IBOutlet weak var viewTitle: UILabel!
-	@IBOutlet weak var loginWithAppleButton: UIButton!
 	@IBOutlet weak var submitButton: UIButton!
 	@IBOutlet weak var forgotUserNameButton: UIButton!
 	@IBOutlet weak var forgotPasswordButton: UIButton!
 	@IBOutlet weak var forgotCredentialsStack: UIStackView!
+	@IBOutlet weak var loginWithAppleButtonStack: UIStackView!
 	
 	
-	var isRegistration : Bool?
+	@Published var isRegistration : Bool?
+	fileprivate var registrationState : AnyCancellable!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setView()
+		showLoginWithAppleButton()
 		// Placeholder Method
 		setDefaultUserInfo()
+		setSubcriptionOfRegistrationState()
 	}
 	
 	// FIXME: - Remove On Build
@@ -70,7 +74,6 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 		
 		// Logic that determines what state the view is currently in.
 		if isRegistrationView {
-			
 			regPasswordField.textContentType = .newPassword
 			passwordTextField.textContentType = .newPassword
 			
@@ -79,14 +82,12 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 			passwordTextField.attributedPlaceholder = NSAttributedString(string: "Confirm Password", attributes: [NSAttributedString.Key.foregroundColor : placeholderTextColor])
 			
 			viewTitle.text = "Registration"
-			loginWithAppleButton.setTitle("Register using Apple ID", for: .normal)
 		}else{
 			regPasswordField.isHidden = true
 			
 			passwordTextField.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : placeholderTextColor])
 			
 			viewTitle.text = "Login"
-			loginWithAppleButton.setTitle("Login with Apple", for: .normal)
 			passwordTextField.isSecureTextEntry = true
 		}
 	}
@@ -156,15 +157,6 @@ class AccessViewController: UIViewController, ASAuthorizationControllerDelegate 
 		}
 	}
 	
-	
-	@IBAction func loginWithAppleButtonClicked(_ sender: Any) {
-		
-		let provider = ASAuthorizationAppleIDProvider()
-		let request = provider.createRequest()
-		let controller = ASAuthorizationController(authorizationRequests: [request])
-		controller.delegate = self
-	}
-	
 	//MARK: Navigation
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -203,6 +195,71 @@ extension AccessViewController {
 			guard let userInfo = result else {return}
 			self?.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
 		}
+	}
+	
+	
+}
+
+//MARK: - Login With Apple Delegate methods
+
+extension AccessViewController : ASAuthorizationControllerDelegate {
+
+	func showLoginWithAppleButton(){
+		let appleLoginButton = ASAuthorizationAppleIDButton()
+		appleLoginButton.addTarget(self, action: #selector(loginWithAppleClicked(_:)), for: .touchUpInside)
+		loginWithAppleButtonStack.addArrangedSubview(appleLoginButton)
+	}
+	
+	@objc func loginWithAppleClicked(_ sender: Any){
+		
+		let provider = ASAuthorizationAppleIDProvider()
+		var request : ASAuthorizationAppleIDRequest!
+		var authorizationController : ASAuthorizationController?
+		
+		switch isRegistration {
+		case false:
+			let requests = [
+				ASAuthorizationAppleIDProvider().createRequest(),
+				ASAuthorizationPasswordProvider().createRequest(),
+			]
+			authorizationController = authorizationControllerMethod(requests: requests)
+		default:
+			request = provider.createRequest()
+			request.requestedScopes = [.fullName, .email]
+			authorizationController = authorizationControllerMethod(requests: [request])
+		}
+		
+		let loginWithAppleAuthorizationController = authorizationController!
+		loginWithAppleAuthorizationController.delegate = self
+		loginWithAppleAuthorizationController.presentationContextProvider = self
+		loginWithAppleAuthorizationController.performRequests()
+	}
+	
+	func authorizationControllerMethod(requests : [ASAuthorizationRequest]) -> ASAuthorizationController {
+		let controller = ASAuthorizationController(authorizationRequests: requests)
+		return controller
+	}
+	
+	func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+		
+//		guard let appleIDCredentialKeys = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
+//		let userID = appleIDCredentialKeys.user
+//		let fullName = appleIDCredentialKeys.fullName // example of how to access full name property.
+//		let email = appleIDCredentialKeys.email // example of how to access email property.
+		
+		// How to save the values to the user device's keychain.
+	}
+	
+	func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+		print(error.localizedDescription)
+	}
+}
+
+extension AccessViewController : ASAuthorizationControllerPresentationContextProviding {
+	func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+		
+		return self.view.window!
+		
 	}
 	
 	

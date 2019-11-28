@@ -150,12 +150,6 @@ extension ChatViewController {
 		
 		dbSnapShot.forEach({
 			let databaseData = $0.data()
-			//			self.chats.append(Chats(
-			//				user: databaseData[Keys.FireBaseKeys.sender] as! String,
-			//				message: databaseData[Keys.FireBaseKeys.messageBody] as! String,
-			//				userIdentifier: databaseData[Keys.FireBaseKeys.uniqueID] as? String,
-			//				timeStamp: databaseData[Keys.FireBaseKeys.timeStamp] as! String
-			//			))
 			
 			removeDuplicates.insert(Chats(
 				user: databaseData[Keys.FireBaseKeys.sender] as! String,
@@ -166,18 +160,7 @@ extension ChatViewController {
 		})
 		
 		chats = removeDuplicates.map({$0})
-		
-		/*
-		dbSnapShot.forEach({
-		let databaseData = $0.data()
-		self.chats.append(Chats(
-		user: databaseData[Keys.FireBaseKeys.sender] as! String,
-		message: databaseData[Keys.FireBaseKeys.messageBody] as! String,
-		userIdentifier: databaseData[Keys.FireBaseKeys.uniqueID] as? String,
-		timeStamp: databaseData[Keys.FireBaseKeys.timeStamp] as! String
-		))
-		})
-		*/
+	
 		let sortedChates = chats.sorted { (value1, value2) -> Bool in
 			value1.timeStamp < value2.timeStamp
 		}
