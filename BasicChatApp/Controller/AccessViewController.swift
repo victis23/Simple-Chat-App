@@ -37,7 +37,6 @@ class AccessViewController: UIViewController {
 		showLoginWithAppleButton()
 		// Placeholder Method
 		setDefaultUserInfo()
-		setSubcriptionOfRegistrationState()
 	}
 	
 	// FIXME: - Remove On Build
