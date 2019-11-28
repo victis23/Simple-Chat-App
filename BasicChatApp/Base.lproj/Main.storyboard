@@ -16,9 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FIX-Od-cqQ">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FIX-Od-cqQ">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="fgd-dO-cVE">
                                 <rect key="frame" x="32" y="660" width="350" height="94"/>
@@ -48,43 +47,48 @@
                                 </subviews>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pjx-OS-Bfo">
-                                <rect key="frame" x="20" y="123" width="137" height="134"/>
+                                <rect key="frame" x="93" y="79" width="228" height="222"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="134" id="IsJ-hL-wnO"/>
+                                    <constraint firstAttribute="height" constant="222" id="1X8-Ce-S31"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simple" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsLetterSpacingToFitWidth="YES" id="hgG-Gb-yoQ">
-                                <rect key="frame" x="177" y="148" width="212" height="98"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="hgG-Gb-yoQ" secondAttribute="height" multiplier="106:49" id="z7p-hd-P5h"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="SnellRoundhand" family="Snell Roundhand" pointSize="80"/>
-                                <color key="textColor" red="0.067683362863594637" green="0.56677215683906357" blue="0.91980725526809692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat App" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="9mk-Fc-Tsp">
-                                <rect key="frame" x="25" y="271" width="364" height="101"/>
-                                <fontDescription key="fontDescription" name="SnellRoundhand" family="Snell Roundhand" pointSize="80"/>
-                                <color key="textColor" red="0.91980725529999996" green="0.49249378519999998" blue="0.31431207020000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="-20" translatesAutoresizingMaskIntoConstraints="NO" id="SOD-OW-yEp">
+                                <rect key="frame" x="50.5" y="393" width="313" height="167"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Simple" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hgG-Gb-yoQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="154" height="86"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="86" id="L4d-Yq-vIE"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="SnellRoundhand" family="Snell Roundhand" pointSize="57"/>
+                                        <color key="textColor" red="0.067683362863594637" green="0.56677215683906357" blue="0.91980725526809692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat App" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="9mk-Fc-Tsp">
+                                        <rect key="frame" x="0.0" y="66" width="313" height="101"/>
+                                        <fontDescription key="fontDescription" name="SnellRoundhand" family="Snell Roundhand" pointSize="80"/>
+                                        <color key="textColor" red="0.91980725529999996" green="0.49249378519999998" blue="0.31431207020000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="hgG-Gb-yoQ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="104" id="56w-Ud-fu6"/>
+                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="centerX" secondItem="fgd-dO-cVE" secondAttribute="centerX" id="0Cx-Tm-rSF"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fgd-dO-cVE" secondAttribute="trailing" constant="32" id="91K-r0-uOZ"/>
                             <constraint firstItem="fgd-dO-cVE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9Es-W3-eNO"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hgG-Gb-yoQ" secondAttribute="trailing" constant="25" id="I1Y-bV-fRQ"/>
+                            <constraint firstItem="fgd-dO-cVE" firstAttribute="top" secondItem="SOD-OW-yEp" secondAttribute="bottom" constant="100" id="BrP-vk-w3H"/>
                             <constraint firstItem="fgd-dO-cVE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="LCn-62-ZIX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9mk-Fc-Tsp" secondAttribute="trailing" constant="25" id="PSS-Ng-Tay"/>
-                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Sho-gW-iCw"/>
                             <constraint firstItem="fgd-dO-cVE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="259" id="UJ1-VH-2wu"/>
-                            <constraint firstItem="9mk-Fc-Tsp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cu8-er-gsa"/>
-                            <constraint firstItem="hgG-Gb-yoQ" firstAttribute="leading" secondItem="Pjx-OS-Bfo" secondAttribute="trailing" constant="20" id="gOn-w3-9Rc"/>
-                            <constraint firstItem="9mk-Fc-Tsp" firstAttribute="top" secondItem="Pjx-OS-Bfo" secondAttribute="bottom" constant="14" id="lWS-8B-w0X"/>
-                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="79" id="qgS-bq-gwS"/>
-                            <constraint firstItem="9mk-Fc-Tsp" firstAttribute="top" secondItem="hgG-Gb-yoQ" secondAttribute="bottom" constant="25" id="uHu-8H-jYp"/>
+                            <constraint firstItem="FIX-Od-cqQ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="-44" id="bO6-mE-nBz"/>
+                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="35" id="dvc-Ex-lCj"/>
+                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="93" id="lL8-Sl-VDE"/>
+                            <constraint firstItem="FIX-Od-cqQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="otP-0k-7xY"/>
+                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="centerX" secondItem="FIX-Od-cqQ" secondAttribute="centerX" id="pcg-ye-R72"/>
+                            <constraint firstItem="Pjx-OS-Bfo" firstAttribute="centerX" secondItem="SOD-OW-yEp" secondAttribute="centerX" id="tdv-DC-6OG"/>
+                            <constraint firstItem="SOD-OW-yEp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50.5" id="toV-Ig-Rel"/>
+                            <constraint firstItem="FIX-Od-cqQ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="zbH-yt-qXH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

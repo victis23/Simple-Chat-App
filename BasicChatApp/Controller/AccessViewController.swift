@@ -11,6 +11,7 @@ import AuthenticationServices
 import FirebaseFirestore
 import FirebaseAuth
 import Combine
+import CryptoKit
 
 class AccessViewController: UIViewController {
 	
@@ -30,6 +31,7 @@ class AccessViewController: UIViewController {
 	
 	@Published var isRegistration : Bool?
 	fileprivate var registrationState : AnyCancellable!
+	var generatedNonce : String!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -196,7 +198,20 @@ extension AccessViewController {
 		}
 	}
 	
-	
+	func loginWithAppleIdAuthorization(idToken:String, nonce: String){
+		let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nonce)
+		
+		Auth.auth().signIn(with: credential) { [weak self](result, error) in
+			
+			if let error = error {
+				print(error.localizedDescription)
+				self?.showAlert(with: error)
+				self?.forgotCredentialsStack.isHidden = false
+			}
+			guard let userInfo = result else {return}
+			self?.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
+		}
+	}
 }
 
 //MARK: - Login With Apple Delegate methods
@@ -213,6 +228,8 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		
 		let provider = ASAuthorizationAppleIDProvider()
 		var request : ASAuthorizationAppleIDRequest!
+		generatedNonce = globalNonceCreator()
+		
 		var authorizationController : ASAuthorizationController?
 		
 		switch isRegistration {
@@ -225,6 +242,7 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		default:
 			request = provider.createRequest()
 			request.requestedScopes = [.fullName, .email]
+			request.nonce = sha256(generatedNonce)
 			authorizationController = authorizationControllerMethod(requests: [request])
 		}
 		
@@ -232,6 +250,16 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		loginWithAppleAuthorizationController.delegate = self
 		loginWithAppleAuthorizationController.presentationContextProvider = self
 		loginWithAppleAuthorizationController.performRequests()
+		
+	}
+	
+	func sha256(_ input: String)->String{
+		let inputData = Data(input.utf8)
+		let hashData = SHA256.hash(data: inputData)
+		let hashString = hashData.compactMap({
+			return String(format: "%02x", $0)
+			}).joined()
+		return hashString
 	}
 	
 	func authorizationControllerMethod(requests : [ASAuthorizationRequest]) -> ASAuthorizationController {
@@ -239,9 +267,50 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		return controller
 	}
 	
+	func globalNonceCreator(length:Int = 32)->String{
+		
+		precondition(length > 0)
+		
+		let availableCharacters : Array<Character> = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+		
+		var result = ""
+		var remainingLength = length
+		
+		while remainingLength > 0 {
+			let randoms: [UInt8] = (0..<16).map({_ in
+				var random: UInt8 = 0
+				let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+				
+				if errorCode != errSecSuccess {
+					fatalError("Unable to create global nonce: \(errorCode)")
+				}
+				return random
+			})
+			
+			randoms.forEach({ random in
+				
+				if length == 0 {
+					return
+				}
+				
+				if random < availableCharacters.count {
+					result.append(availableCharacters[Int(random)])
+					remainingLength -= 1
+				}
+			})
+		}
+		
+		return result
+	}
+	
 	func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 		
-//		guard let appleIDCredentialKeys = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
+		guard let appleIDCredentials = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
+		guard let appleIDToken = appleIDCredentials.identityToken else {return}
+		guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {return}
+	
+		loginWithAppleIdAuthorization(idToken: idTokenString, nonce: generatedNonce)
+
 //		let userID = appleIDCredentialKeys.user
 //		let fullName = appleIDCredentialKeys.fullName // example of how to access full name property.
 //		let email = appleIDCredentialKeys.email // example of how to access email property.
