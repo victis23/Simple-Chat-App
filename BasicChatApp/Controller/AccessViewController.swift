@@ -169,6 +169,14 @@ class AccessViewController: UIViewController {
 		}
 	}
 	
+	@IBAction func forgotUsernameButtonTapped(_ sender: Any) {
+		print("Forgot Username")
+	}
+	
+	@IBAction func forgotPasswordButtonTapped(_ sender: Any) {
+		print("Forgot Password")
+	}
+	
 	//MARK: Navigation
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
