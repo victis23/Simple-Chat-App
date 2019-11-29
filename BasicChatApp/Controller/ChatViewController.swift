@@ -30,6 +30,7 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	var publicSubscriber : AnyCancellable?
 	
 	var database = Firestore.firestore()
+	var isFacebookSignIn : Bool = false
 	
 	// Combine Properties
 	var subscriber : AnyCancellable?
@@ -67,7 +68,15 @@ extension ChatViewController {
 		
 		guard let messageBody = messageField.text else {return}
 		guard let users = Auth.auth().currentUser else {return}
-		guard let email = users.email else {return}
+		var email : String = ""
+		
+		if isFacebookSignIn {
+			guard let username = users.displayName else {return}
+			email = "Facebook Login For \(username)"
+		}else{
+			guard let userEmail = users.email else {return}
+			email = userEmail
+		}
 		
 		// Creates the UUID that will be used for updated our diffable data source.
 		let tempObjectIDCreator = UuidCreator()
@@ -185,7 +194,7 @@ extension ChatViewController {
 				$0?.textColor = .white
 			})
 			
-			if chats.user != currentSender.email {
+			if chats.user != currentSender.displayName {
 				[cell.textLabel, cell.detailTextLabel].forEach({
 					$0?.textColor = .black
 				})

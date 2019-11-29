@@ -166,7 +166,6 @@ class AccessViewController: UIViewController {
 		if segue.identifier == Keys.Segues.chatWindow {
 			let navigationController = segue.destination as? UINavigationController
 			let destinationController = navigationController?.topViewController as! ChatViewController
-//			destinationController.user = sender as? AuthDataResult
 			print(destinationController)
 			clearAllFields()
 			view.endEditing(true)
@@ -224,12 +223,6 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		let appleLoginButton = ASAuthorizationAppleIDButton()
 		appleLoginButton.addTarget(self, action: #selector(loginWithAppleClicked(_:)), for: .touchUpInside)
 		loginWithAppleButtonStack.addArrangedSubview(appleLoginButton)
-	}
-	
-	func showLoginWithFacebookButton(){
-		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile])
-		facebookLoginButton.center = view.center
-		loginWithAppleButtonStack.addArrangedSubview(facebookLoginButton)
 	}
 	
 	@objc func loginWithAppleClicked(_ sender: Any){
@@ -337,6 +330,36 @@ extension AccessViewController : ASAuthorizationControllerPresentationContextPro
 		return self.view.window!
 		
 	}
+}
+
+//MARK: - Facebook Login API
+extension AccessViewController : LoginButtonDelegate {
 	
+	func showLoginWithFacebookButton(){
+		
+		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile])
+		facebookLoginButton.center = view.center
+		facebookLoginButton.delegate = self
+		loginWithAppleButtonStack.addArrangedSubview(facebookLoginButton)
+	}
 	
+	func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+		guard let error = error else {
+			guard let token = AccessToken.current?.tokenString else {return}
+			let facebookCreds = FacebookAuthProvider.credential(withAccessToken: token)
+			Auth.auth().signIn(with: facebookCreds) { (result, error) in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+				guard let userInfo = result else {return}
+				self.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
+			}
+			return
+		}
+		print(error.localizedDescription)
+	}
+	
+	func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+		clearAllFields()
+	}
 }
