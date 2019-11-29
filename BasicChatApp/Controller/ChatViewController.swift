@@ -223,8 +223,10 @@ extension ChatViewController {
 		snapShot.appendItems(chat, toSection: .main)
 		
 		dataSource.apply(snapShot, animatingDifferences: false) {
-			if self.chats.count > 0 {
+			if self.chats.count > 10 {
 				self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: true)
+			}else{
+				
 			}
 		}
 	}

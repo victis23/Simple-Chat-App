@@ -38,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		//MARK: - Facebook Login SDK
 		ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 		AppEvents.activateApp()
+		Settings.isAutoLogAppEventsEnabled = false
+		Settings.isAdvertiserIDCollectionEnabled = false
 		return true
 	}
 	
