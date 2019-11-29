@@ -34,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		//MARK: - Login with Apple
 //		let appleIDProvider = ASAuthorizationAppleIDProvider()
 		
+		//MARK: - Facebook Login SDK
+		
+		
 		return true
 	}
 
