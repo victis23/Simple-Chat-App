@@ -12,6 +12,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import Combine
 import CryptoKit
+import FacebookLogin
 
 class AccessViewController: UIViewController {
 	
@@ -37,6 +38,7 @@ class AccessViewController: UIViewController {
 		super.viewDidLoad()
 		setView()
 		showLoginWithAppleButton()
+		showLoginWithFacebookButton()
 		// Placeholder Method
 		setDefaultUserInfo()
 	}
@@ -222,6 +224,12 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		let appleLoginButton = ASAuthorizationAppleIDButton()
 		appleLoginButton.addTarget(self, action: #selector(loginWithAppleClicked(_:)), for: .touchUpInside)
 		loginWithAppleButtonStack.addArrangedSubview(appleLoginButton)
+	}
+	
+	func showLoginWithFacebookButton(){
+		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile])
+		facebookLoginButton.center = view.center
+		loginWithAppleButtonStack.addArrangedSubview(facebookLoginButton)
 	}
 	
 	@objc func loginWithAppleClicked(_ sender: Any){

@@ -11,6 +11,7 @@ import CoreData
 import Firebase
 import AuthenticationServices
 import IQKeyboardManagerSwift
+import FacebookCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -35,12 +36,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		let appleIDProvider = ASAuthorizationAppleIDProvider()
 		
 		//MARK: - Facebook Login SDK
-		
-		
+		ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+		AppEvents.activateApp()
 		return true
 	}
-
-	// MARK: UISceneSession Lifecycle
+	
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		return ApplicationDelegate.shared.application(app, open: url, options: options)
+	}
+	
+	// MARK: - UISceneSession Lifecycle
 
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
 		// Called when a new scene session is being created.

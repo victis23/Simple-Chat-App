@@ -23,6 +23,9 @@
 		7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BC32380D1AE00433A7C /* AccessViewController.swift */; };
 		7D5B19752380DADE00527944 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19742380DADE00527944 /* Podfile */; };
 		7D5B19772380DBB700527944 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19762380DBB700527944 /* GoogleService-Info.plist */; };
+		7D5E2F8D2390BB8A00E076E8 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5E2F8C2390BB8A00E076E8 /* FacebookCore */; };
+		7D5E2F8F2390BB8A00E076E8 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5E2F8E2390BB8A00E076E8 /* FacebookLogin */; };
+		7D5E2F912390BB8A00E076E8 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5E2F902390BB8A00E076E8 /* FacebookShare */; };
 		7D6BA68423816B5800EDE983 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6BA68323816B5800EDE983 /* Keys.swift */; };
 		7D6BA68623817D3400EDE983 /* ChatWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */; };
 		7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2B238180290079D39E /* ChatViewController.swift */; };
@@ -88,9 +91,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5E2F8F2390BB8A00E076E8 /* FacebookLogin in Frameworks */,
 				7DDB1A352381C2280079D39E /* AuthenticationServices.framework in Frameworks */,
+				7D5E2F912390BB8A00E076E8 /* FacebookShare in Frameworks */,
 				93C700D386C74670AA0E79FE /* Pods_BasicChatApp.framework in Frameworks */,
 				7D245F01238B2F1B009B3428 /* IQKeyboardManagerSwift in Frameworks */,
+				7D5E2F8D2390BB8A00E076E8 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +246,9 @@
 			name = BasicChatApp;
 			packageProductDependencies = (
 				7D245F00238B2F1B009B3428 /* IQKeyboardManagerSwift */,
+				7D5E2F8C2390BB8A00E076E8 /* FacebookCore */,
+				7D5E2F8E2390BB8A00E076E8 /* FacebookLogin */,
+				7D5E2F902390BB8A00E076E8 /* FacebookShare */,
 			);
 			productName = BasicChatApp;
 			productReference = 7D278B8A2380B2BF00433A7C /* Simple Chat.app */;
@@ -315,6 +324,7 @@
 			mainGroup = 7D278B812380B2BF00433A7C;
 			packageReferences = (
 				7D245EFF238B2F1B009B3428 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				7D5E2F8B2390BB8A00E076E8 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 7D278B8B2380B2BF00433A7C /* Products */;
 			projectDirPath = "";
@@ -758,6 +768,14 @@
 				minimumVersion = 6.5.4;
 			};
 		};
+		7D5E2F8B2390BB8A00E076E8 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.11.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -765,6 +783,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7D245EFF238B2F1B009B3428 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		7D5E2F8C2390BB8A00E076E8 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D5E2F8B2390BB8A00E076E8 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		7D5E2F8E2390BB8A00E076E8 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D5E2F8B2390BB8A00E076E8 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		7D5E2F902390BB8A00E076E8 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D5E2F8B2390BB8A00E076E8 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
 		};
 /* End XCSwiftPackageProductDependency section */
 
