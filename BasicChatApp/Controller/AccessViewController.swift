@@ -29,6 +29,7 @@ class AccessViewController: UIViewController {
 	@IBOutlet weak var forgotCredentialsStack: UIStackView!
 	@IBOutlet weak var loginWithAppleButtonStack: UIStackView!
 	
+	var appDelegate = UIApplication.shared.delegate as! AppDelegate
 	
 	@Published var isRegistration : Bool?
 	fileprivate var registrationState : AnyCancellable!
@@ -39,14 +40,22 @@ class AccessViewController: UIViewController {
 		setView()
 		showLoginWithAppleButton()
 		showLoginWithFacebookButton()
-		// Placeholder Method
-		setDefaultUserInfo()
+		checkFacebookLoginStatus()
 	}
 	
-	// FIXME: - Remove On Build
-	func setDefaultUserInfo(){
-		userNameTextField.text = "victisgoth@gmail.com"
-		passwordTextField.text = "jd5ut7hp"
+	func checkFacebookLoginStatus(){
+		guard let token = AccessToken.current else {
+			print("No Token...")
+			return
+		}
+		let facebookCredential = FacebookAuthProvider.credential(withAccessToken: token.tokenString)
+		Auth.auth().signIn(with: facebookCredential) { (result, error) in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			guard let userInfo = result else {return}
+			self.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
+		}
 	}
 	
 	// MARK: Class Methods
@@ -166,7 +175,12 @@ class AccessViewController: UIViewController {
 		if segue.identifier == Keys.Segues.chatWindow {
 			let navigationController = segue.destination as? UINavigationController
 			let destinationController = navigationController?.topViewController as! ChatViewController
-			print(destinationController)
+			
+			let userCreds = sender as! AuthDataResult
+			if userCreds.user.email == nil {
+				destinationController.isFacebookSignIn = true
+			}
+			
 			clearAllFields()
 			view.endEditing(true)
 		}
@@ -337,7 +351,7 @@ extension AccessViewController : LoginButtonDelegate {
 	
 	func showLoginWithFacebookButton(){
 		
-		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile])
+		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile, .email])
 		facebookLoginButton.center = view.center
 		facebookLoginButton.delegate = self
 		loginWithAppleButtonStack.addArrangedSubview(facebookLoginButton)

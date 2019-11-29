@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import Combine
+import FacebookLogin
 
 class ChatViewController: UIViewController, ObservableObject, UITableViewDelegate {
 	
@@ -72,7 +73,7 @@ extension ChatViewController {
 		
 		if isFacebookSignIn {
 			guard let username = users.displayName else {return}
-			email = "Facebook Login For \(username)"
+			email = "Facebook - \(username)"
 		}else{
 			guard let userEmail = users.email else {return}
 			email = userEmail
@@ -187,19 +188,30 @@ extension ChatViewController {
 			guard let currentSender = Auth.auth().currentUser else {fatalError()}
 			
 			let cell = tableView.dequeueReusableCell(withIdentifier: Keys.Cells.chatWindowUniqueIdentifier, for: indexPath)
-			cell.detailTextLabel?.text = chats.message
-			cell.textLabel?.text = chats.user
 			
-			[cell.textLabel, cell.detailTextLabel].forEach({
-				$0?.textColor = .white
-			})
-			
-			if chats.user != currentSender.displayName {
-				[cell.textLabel, cell.detailTextLabel].forEach({
-					$0?.textColor = .black
-				})
+			func compareValues(isFacbook:Bool){
+				let identifer = isFacbook ? "Facebook - \(currentSender.displayName!)" : currentSender.email
+				
+				if chats.user != identifer {
+					[cell.textLabel, cell.detailTextLabel].forEach({
+						$0?.textColor = .black
+					})
+				}else{
+					[cell.textLabel, cell.detailTextLabel].forEach({
+						$0?.textColor = .white
+					})
+				}
 			}
 			
+			if self.isFacebookSignIn {
+				cell.textLabel?.text = currentSender.displayName
+				compareValues(isFacbook: true)
+			}else{
+				cell.textLabel?.text = chats.user
+				compareValues(isFacbook: false)
+			}
+			
+			cell.detailTextLabel?.text = chats.message
 			return cell
 		})
 		
@@ -228,6 +240,10 @@ extension ChatViewController {
 		
 		do {
 			try firebaseAuth.signOut()
+			
+			let facebookLoginManager = LoginManager()
+			facebookLoginManager.logOut()
+			
 		} catch (let error) {
 			print(error.localizedDescription)
 		}
