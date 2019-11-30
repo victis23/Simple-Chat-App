@@ -13,6 +13,9 @@ import UIKit
 
 extension ChatViewController {
 	
+	/// Method creates event subscriber for notification `keyboardDidShowNotification`
+	/// - Important: This method is only called when the amount of chat messages on screen is [0,5)
+	/// - Note: That the amount the chat box is moved is 100 points less than the height of the keyboard.
 	func keyboardIsPresent(){
 		
 		self.keyboardShowed = NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification).sink { (notification) in
@@ -27,6 +30,7 @@ extension ChatViewController {
 		}
 	}
 	
+	/// Method returns `comunicationStack` to its original position when the keyboard is no longer being presented on screen.
 	func keyboardIsHidden(){
 		
 		self.keyboardHides = NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)
@@ -37,6 +41,7 @@ extension ChatViewController {
 			})
 	}
 	
+	/// Method is called once the number of items in `chats` collection is == 5
 	func killKeyboardObserver(){
 		
 		UIView.animate(withDuration: 0.2) {
@@ -44,6 +49,7 @@ extension ChatViewController {
 		}
 		self.keyboardHides?.cancel()
 		self.keyboardShowed?.cancel()
+		// For a smooth transition between the custom keyboard observing methods and KeyboardIQ the keyboard must be dismissed and recalled.
 		view.endEditing(true)
 		messageField.becomeFirstResponder()
 	}
