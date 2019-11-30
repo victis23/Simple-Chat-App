@@ -12,8 +12,10 @@ import FirebaseFirestore
 import Combine
 import FacebookLogin
 
+/// This collection handles all chat events saved to the Google FireBase database after user authentification.
 class ChatViewController: UIViewController, ObservableObject, UITableViewDelegate {
 	
+	// Type used to define sections in diffable datasource for tableview.
 	enum Sections {
 		case main
 	}
@@ -28,22 +30,29 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	
 	// DataSource
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
-	var publicSubscriber : AnyCancellable?
-	var appDelegate = UIApplication.shared.delegate as! AppDelegate
-	var keyboardShowed : AnyCancellable?
-	var keyboardHides : AnyCancellable?
 	
+	var appDelegate = UIApplication.shared.delegate as! AppDelegate
+	
+	
+	// Google Firestore Firebase Instance.
 	var database = Firestore.firestore()
 	var isFacebookSignIn : Bool = false
 	
 	
-	// Combine Properties
-	var subscriber : AnyCancellable?
+	// MARK: Combine Properties | Publishers .... Subscribers
+	
 	@Published var dataBaseSnapShot : QuerySnapshot!
 	var future : AnyPublisher<QuerySnapshot,Never>!
 	
-	/// Holds chat messages that will display within tableview
+	var subscriber : AnyCancellable?
+	var publicSubscriber : AnyCancellable?
+	var keyboardShowed : AnyCancellable?
+	var keyboardHides : AnyCancellable?
+	
+	// A timestamp sorted list of messages.
 	var chats : [Chats] = []
+	
+	//MARK: - State
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -67,6 +76,7 @@ extension ChatViewController {
 	
 	@IBAction func sendButtonTapped(_ sender: Any) {
 		
+		/// Type that sets uniqueID for user entries into database.
 		struct UuidCreator {
 			let identifier = UUID()
 		}
@@ -75,6 +85,7 @@ extension ChatViewController {
 		guard let users = Auth.auth().currentUser else {return}
 		var email : String = ""
 		
+		// Since fb users will not be providing an email, their username is used as a placeholder instead.
 		if isFacebookSignIn {
 			guard let username = users.displayName else {return}
 			email = "Facebook - \(username)"
@@ -83,21 +94,25 @@ extension ChatViewController {
 			email = userEmail
 		}
 		
-		// Creates the UUID that will be used for updated our diffable data source.
+		// Object that holds our UUID.
 		let tempObjectIDCreator = UuidCreator()
 		let stringID = "\(tempObjectIDCreator.identifier)"
 		
+		// Timestamp must have time listed in long format for accuracy.
 		let formatter = DateFormatter()
 		formatter.dateStyle = .short
 		formatter.timeStyle = .long
 		let timeStamp = formatter.string(from: Date())
 		
 		createDocument(user: email, userId: stringID, messageBody: messageBody, timeStamp: timeStamp)
-		
+		// Reset our message field in preperation for next message.
 		messageField.text = nil
 	}
 	
 	//MARK: Create FireStore Document
+	
+	/// Method gathers data provided by user and bundles it into a new document for the database.
+	/// - Note: The document data is composed of 4 string objects.
 	func createDocument(user email: String, userId: String, messageBody:String, timeStamp:String){
 		
 		let collection = database.collection(Keys.FireBaseKeys.collection)
@@ -115,11 +130,12 @@ extension ChatViewController {
 	// MARK: Create FireStore Observer
 	func createFireStoreServerObserver(){
 		
+		/// Creates an observer for our Database. This method will be called whenever there is an update to our remote database.
 		database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
 			if let error = error {
 				print(error.localizedDescription)
 			}
-			
+			// After snapshot is unwrapped it's passed to a publisher who's subscriber assigns the value of our snapshot to a class property. This was done simply for combine practice seeing that we could have simply assigned the value directly to the property which also happens to be a publisher itself here.
 			guard let snapshot = snapshot else {return}
 			
 			self.future = Just(snapshot)
@@ -132,6 +148,7 @@ extension ChatViewController {
 		}
 	}
 	
+	/// Creates an observer that is called whenever the value of `dataBaseSnapShot` is changed.
 	func getValuesFromSubscriber(){
 		
 		publicSubscriber = $dataBaseSnapShot
@@ -141,7 +158,7 @@ extension ChatViewController {
 		}
 	}
 	
-	// Simple Method without using combine framework.
+	/// Simple Method without using combine framework kept here just for reference.
 	/*
 	func createFireStoreServerObserver(){
 	database.collection(Keys.FireBaseKeys.collection).addSnapshotListener { (snapshot, error) in
@@ -155,6 +172,12 @@ extension ChatViewController {
 	*/
 	
 	//MARK: Retrieve Values from FireStore Database
+	
+	/// Method retrieves updates from firebase document and assigns them to a `Chats` object which is sorted and placed into a ordered collection.
+	/// - Note: The values retrieved from our document are hashed and duplicates are removed with `removeDuplicates` collection.
+	/// -	Items are downcasted back into `String` types.
+	/// - 	Items are sorted from earliest to latest and placed within an ordered collection that must conform to `Hashable` protocol.
+	/// -	Items are used for argument in `createSnapShot(with:)` call.
 	func retrieveDataFromDatabase(with snapshot: QuerySnapshot){
 		
 		let dbSnapShot = snapshot.documents
@@ -189,6 +212,10 @@ extension ChatViewController {
 	
 	//MARK: - TableView DataSource & Delegate Methods
 	
+	/// Creates instance of `UITableViewDiffableDataSource`
+	///	-	`SectionIdentifierType = Sections`
+	/// -	`ItemIdentifierType = Chats`
+	/// -	Important: Visual of table is affected by user authentification method.
 	func createDataSource(){
 		dataSource = UITableViewDiffableDataSource<Sections,Chats>(tableView: tableView, cellProvider: { (tableView, indexPath, chats) -> UITableViewCell? in
 			
@@ -223,6 +250,8 @@ extension ChatViewController {
 		
 	}
 	
+	/// Creates source of TRUTH for our datasource property.
+	/// -	Note: The position and size of the tableview is determined in this method as well. Breaks SOLID?
 	func createSnapShot(with chat: [Chats]){
 		var snapShot = NSDiffableDataSourceSnapshot<Sections,Chats>()
 		snapShot.appendSections([.main])
@@ -249,6 +278,8 @@ extension ChatViewController {
 	}
 	
 	//MARK: - Navigation — Logout
+	
+	/// Logs user out of Google FireBase & Facebook if they used that method for login.
 	@IBAction func logoutButton(_ sender: Any) {
 		
 		let firebaseAuth = Auth.auth()
@@ -263,9 +294,9 @@ extension ChatViewController {
 			print(error.localizedDescription)
 		}
 		
-		// Terminates the subscription.
+		// Terminates the subscription to Google Firebase updates.
 		publicSubscriber?.cancel()
-		
+		// Returns user to login screen.
 		performSegue(withIdentifier: Keys.Segues.homeFromChatWindow, sender: nil)
 	}
 }
