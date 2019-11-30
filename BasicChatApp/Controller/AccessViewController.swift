@@ -359,7 +359,7 @@ extension AccessViewController : LoginButtonDelegate {
 	
 	func showLoginWithFacebookButton(){
 		
-		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile, .email])
+		let facebookLoginButton = FBLoginButton(permissions: [.publicProfile, .email,])
 		facebookLoginButton.center = view.center
 		facebookLoginButton.delegate = self
 		loginWithAppleButtonStack.addArrangedSubview(facebookLoginButton)

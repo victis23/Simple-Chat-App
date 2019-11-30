@@ -10,56 +10,43 @@ import UIKit
 
 //MARK: - Keyboard Handling Methods
 
-/*
+
 extension ChatViewController {
 	
-	func addKeyboardObservers(with name: NSNotification.Name){
-		NotificationCenter.default.addObserver(self, selector: #selector(resizeViewWithKeyboardSize(_:)), name: name, object: nil)
-	}
-	
-	func removeKeyboardObservers(with name: NSNotification.Name){
-		NotificationCenter.default.removeObserver(self, name: name, object: nil)
-	}
-	
-	func addShrinkTableViewFrameObserver() {
+	func keyboardIsPresent(){
 		
-		shrinkSubscriber = NotificationCenter.default.publisher(for: shrink)
-			.sink { (notification) in
-				if self.shrinkCounter == 1 {
-					self.shrinkCounter = 0
-					self.tableView.frame.size.height = (self.tableView.frame.height - 230)
-					
-					self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: false)
-					
-				}
-		}
-	}
-	
-	@objc func resizeViewWithKeyboardSize(_ notification: Notification){
-		let name = notification.name
-		switch name {
-		case show:
-			let keyboardRawSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-			let keybaordFrame = keyboardRawSize?.cgRectValue
-			guard let keyboardHeight = keybaordFrame?.height else {return}
-			let difference = (keyboardHeight / 2 ) + messageField.frame.height
-			moveTextBoxAndSendButton(amount: difference)
-		default:
-			UIView.animate(withDuration: 0.2) {
-				self.tableView.frame.size.height = self.originalTableViewFrame.height
-				self.communicationStack.transform = .identity
-			}
+		self.keyboardShowed = NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification).sink { (notification) in
 			
+			let keyboardRawSizeValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+			let keyboardFrame = keyboardRawSizeValue?.cgRectValue
+			guard let keyboardHeight = keyboardFrame?.height else {return}
+			
+			UIView.animate(withDuration: 0.2) {
+				self.communicationStack.transform = CGAffineTransform(translationX: 0, y: (keyboardHeight - 100) * -1)
+			}
 		}
 	}
 	
-	func moveTextBoxAndSendButton(amount:CGFloat){
-		UIView.animate(withDuration: 0.2, animations: {
-			self.communicationStack.transform = CGAffineTransform(translationX: 0, y: (amount * -1))
-			self.tableView.frame.size.height = self.tableView.frame.height - 230
-			self.loadViewIfNeeded()
-		}, completion: nil)
+	func keyboardIsHidden(){
 		
+		self.keyboardHides = NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)
+			.sink(receiveValue: { (notification) in
+				UIView.animate(withDuration: 0.2) {
+					self.communicationStack.transform = .identity
+				}
+			})
+	}
+	
+	func killKeyboardObserver(){
+		
+		UIView.animate(withDuration: 0.2) {
+			self.communicationStack.transform = .identity
+		}
+		self.keyboardHides?.cancel()
+		self.keyboardShowed?.cancel()
+		view.endEditing(true)
+		messageField.becomeFirstResponder()
 	}
 }
-*/
+
+	

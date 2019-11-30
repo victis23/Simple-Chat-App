@@ -29,9 +29,13 @@ class ChatViewController: UIViewController, ObservableObject, UITableViewDelegat
 	// DataSource
 	var dataSource : UITableViewDiffableDataSource<Sections,Chats>!
 	var publicSubscriber : AnyCancellable?
+	var appDelegate = UIApplication.shared.delegate as! AppDelegate
+	var keyboardShowed : AnyCancellable?
+	var keyboardHides : AnyCancellable?
 	
 	var database = Firestore.firestore()
 	var isFacebookSignIn : Bool = false
+	
 	
 	// Combine Properties
 	var subscriber : AnyCancellable?
@@ -156,6 +160,9 @@ extension ChatViewController {
 		let dbSnapShot = snapshot.documents
 		
 		//		self.chats.removeAll()
+		
+		//Uses the collection item's unique identifier to remove duplicates.
+		// This works outside the scope of this function however it needs to be placed here so that when the server gets erased it removes the erased entries without having to restart the session.
 		var removeDuplicates : Set<Chats> = []
 		
 		dbSnapShot.forEach({
@@ -210,7 +217,6 @@ extension ChatViewController {
 				cell.textLabel?.text = chats.user
 				compareValues(isFacbook: false)
 			}
-			
 			cell.detailTextLabel?.text = chats.message
 			return cell
 		})
@@ -223,10 +229,17 @@ extension ChatViewController {
 		snapShot.appendItems(chat, toSection: .main)
 		
 		dataSource.apply(snapShot, animatingDifferences: false) {
-			if self.chats.count > 10 {
+			
+			if self.chats.count >= 5 {
 				self.tableView.scrollToRow(at: IndexPath(row: self.chats.count - 1, section: 0), at: .bottom, animated: true)
+				self.appDelegate.keyboardManager(isOn: true)
+				if self.chats.count == 5 {
+					self.killKeyboardObserver()
+				}
 			}else{
-				
+				self.appDelegate.keyboardManager(isOn: false)
+				self.keyboardIsPresent()
+				self.keyboardIsHidden()
 			}
 		}
 	}

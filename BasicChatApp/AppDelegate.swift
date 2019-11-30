@@ -26,11 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		FirebaseApp.configure()
 		
 		//MARK: - IQKeyboardManager - Keyboard Manager
-		
-		let keyboardManager = IQKeyboardManager.shared
-		keyboardManager.enable = true
-		keyboardManager.shouldResignOnTouchOutside = true
-		keyboardManager.enableAutoToolbar = false
+		keyboardManager(isOn: true)
 		
 		//MARK: - Login with Apple
 //		let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -41,6 +37,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Settings.isAutoLogAppEventsEnabled = false
 		Settings.isAdvertiserIDCollectionEnabled = false
 		return true
+	}
+	
+	func keyboardManager(isOn: Bool){
+		let keyboardManager = IQKeyboardManager.shared
+		keyboardManager.enable = isOn
+		keyboardManager.shouldResignOnTouchOutside = true
+		keyboardManager.enableAutoToolbar = false
 	}
 	
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
