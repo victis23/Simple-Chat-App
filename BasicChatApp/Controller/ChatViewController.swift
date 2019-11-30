@@ -200,12 +200,8 @@ extension ChatViewController {
 		})
 		
 		chats = removeDuplicates.map({$0})
-	
-		let sortedChates = chats.sorted { (value1, value2) -> Bool in
-			value1.timeStamp < value2.timeStamp
-		}
-		
-		createSnapShot(with: sortedChates)
+		chats.sort(by: {$0.timeStamp < $1.timeStamp})
+		createSnapShot(with: chats)
 	}
 	
 	

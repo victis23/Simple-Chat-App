@@ -14,9 +14,10 @@ import Combine
 import CryptoKit
 import FacebookLogin
 
+/// Controller that handles access credentials and logging into Google Firebase.
 class AccessViewController: UIViewController {
 	
-	
+	// MARK: Class Properties | @IBOutlets --
 	@IBOutlet weak var userNameTextField: UITextField!
 	@IBOutlet weak var passwordTextField: UITextField!
 	@IBOutlet weak var regPasswordField: UITextField!
@@ -29,33 +30,21 @@ class AccessViewController: UIViewController {
 	@IBOutlet weak var forgotCredentialsStack: UIStackView!
 	@IBOutlet weak var loginWithAppleButtonStack: UIStackView!
 	
-	var appDelegate = UIApplication.shared.delegate as! AppDelegate
-	
-	@Published var isRegistration : Bool?
-	fileprivate var registrationState : AnyCancellable!
 	var generatedNonce : String!
 	
+	var appDelegate = UIApplication.shared.delegate as! AppDelegate
+	
+	//MARK: Publishers & Subscribers
+	@Published var isRegistration : Bool?
+	fileprivate var registrationState : AnyCancellable!
+	
+	//MARK: - State
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setView()
 		showLoginWithAppleButton()
 		showLoginWithFacebookButton()
 		checkFacebookLoginStatus()
-	}
-	
-	func checkFacebookLoginStatus(){
-		guard let token = AccessToken.current else {
-			print("No Token...")
-			return
-		}
-		let facebookCredential = FacebookAuthProvider.credential(withAccessToken: token.tokenString)
-		Auth.auth().signIn(with: facebookCredential) { (result, error) in
-			if let error = error {
-				print(error.localizedDescription)
-			}
-			guard let userInfo = result else {return}
-			self.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
-		}
 	}
 	
 	// MARK: Class Methods
@@ -127,7 +116,9 @@ class AccessViewController: UIViewController {
 	
 	//MARK: - IBActions
 	
+	/// Begins the authentication process.
 	@IBAction func submitButtonTapped(_ sender: Any) {
+		// Makes sure user has entered a correctly formated email address.
 		guard let username = userNameTextField.text, username.contains("@") else {
 			userNameTextField.text = nil
 			passwordTextField.text = nil
@@ -135,7 +126,7 @@ class AccessViewController: UIViewController {
 			userNameTextField.becomeFirstResponder()
 			return
 		}
-		
+		// Depending on whether the user is signing in or registering this switch control flow verifies entered values. If this is a registration matching emails are verified as well.
 		switch isRegistration {
 		case true:
 			guard let password = passwordTextField.text, let passwordConfirmation = regPasswordField.text else {return}
@@ -152,6 +143,7 @@ class AccessViewController: UIViewController {
 		}
 	}
 	
+	///Controls which view is first responder.
 	@IBAction func returnKeyPressed(_ sender: UITextField) {
 		switch sender {
 		case userNameTextField:
@@ -188,7 +180,6 @@ class AccessViewController: UIViewController {
 			if userCreds.user.email == nil {
 				destinationController.isFacebookSignIn = true
 			}
-			
 			clearAllFields()
 			view.endEditing(true)
 		}
@@ -198,6 +189,7 @@ class AccessViewController: UIViewController {
 //MARK: - FireBase Authorization Methods
 extension AccessViewController {
 	
+	/// Creates credentials for new user on database.
 	func registrationAuthentification(username: String, password: String){
 		Auth.auth().createUser(withEmail: username, password: password) { [weak self](result, error) in
 			guard error == nil else {
@@ -209,6 +201,7 @@ extension AccessViewController {
 		}
 	}
 	
+	/// Allows existing users to sign-in to database.
 	func loginAuthentification(username: String, password: String){
 		Auth.auth().signIn(withEmail: username, password: password) { [weak self](result, error) in
 			guard error == nil else {
@@ -221,9 +214,11 @@ extension AccessViewController {
 		}
 	}
 	
+	/// Utilizes nonce and idToken provided by Sign-in with Apple to authenticate a user with Google Firebase.
+	/// -	Important: Unlike the standard method for Firebase authentification, once the token is created here the user is good to go. Distringuishing between account creation and logging in is handled by `loginWithAppleClick(_:)`.
 	func loginWithAppleIdAuthorization(idToken:String, nonce: String){
-		let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nonce)
 		
+		let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nonce)
 		Auth.auth().signIn(with: credential) { [weak self](result, error) in
 			
 			if let error = error {
@@ -241,12 +236,16 @@ extension AccessViewController {
 
 extension AccessViewController : ASAuthorizationControllerDelegate {
 
+	/// Creates the Sign-in With Apple Button and places it within the loginWithAppleButtonStack.
 	func showLoginWithAppleButton(){
 		let appleLoginButton = ASAuthorizationAppleIDButton()
 		appleLoginButton.addTarget(self, action: #selector(loginWithAppleClicked(_:)), for: .touchUpInside)
 		loginWithAppleButtonStack.addArrangedSubview(appleLoginButton)
 	}
 	
+	/// Method that is called when user taps on button for Apple ID Sign-in.
+	/// - Important:
+	/// 	-	If user has already
 	@objc func loginWithAppleClicked(_ sender: Any){
 		
 		let provider = ASAuthorizationAppleIDProvider()
@@ -275,7 +274,7 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		loginWithAppleAuthorizationController.performRequests()
 		
 	}
-	
+	/// Encripts generated nonce which is assigned to the `request.nonce` property held by device For this App's Bundle.
 	func sha256(_ input: String)->String{
 		let inputData = Data(input.utf8)
 		let hashData = SHA256.hash(data: inputData)
@@ -285,11 +284,13 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		return hashString
 	}
 	
+	/// Creates an `ASAuthorizationController` utilizing provided `ASAuthorizationRequest` Collections.
 	func authorizationControllerMethod(requests : [ASAuthorizationRequest]) -> ASAuthorizationController {
 		let controller = ASAuthorizationController(authorizationRequests: requests)
 		return controller
 	}
 	
+	/// Creates a randomized string to be used as unique nonce value.
 	func globalNonceCreator(length:Int = 32)->String{
 		
 		precondition(length > 0)
@@ -334,10 +335,6 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 	
 		loginWithAppleIdAuthorization(idToken: idTokenString, nonce: generatedNonce)
 
-//		let userID = appleIDCredentialKeys.user
-//		let fullName = appleIDCredentialKeys.fullName // example of how to access full name property.
-//		let email = appleIDCredentialKeys.email // example of how to access email property.
-		
 		// How to save the values to the user device's keychain.
 	}
 	
@@ -356,6 +353,21 @@ extension AccessViewController : ASAuthorizationControllerPresentationContextPro
 
 //MARK: - Facebook Login API
 extension AccessViewController : LoginButtonDelegate {
+	
+	func checkFacebookLoginStatus(){
+		guard let token = AccessToken.current else {
+			print("No Token...")
+			return
+		}
+		let facebookCredential = FacebookAuthProvider.credential(withAccessToken: token.tokenString)
+		Auth.auth().signIn(with: facebookCredential) { (result, error) in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			guard let userInfo = result else {return}
+			self.performSegue(withIdentifier: Keys.Segues.chatWindow, sender: userInfo)
+		}
+	}
 	
 	func showLoginWithFacebookButton(){
 		
