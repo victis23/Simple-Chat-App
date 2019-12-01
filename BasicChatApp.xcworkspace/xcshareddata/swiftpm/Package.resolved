@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Facebook",
+        "repositoryURL": "https://github.com/facebook/facebook-ios-sdk.git",
+        "state": {
+          "branch": null,
+          "revision": "ccac7865167b6c12bdf71e2e9b81ad86c3e78ed3",
+          "version": "5.11.1"
+        }
+      },
+      {
+        "package": "IQKeyboardManagerSwift",
+        "repositoryURL": "https://github.com/hackiftekhar/IQKeyboardManager.git",
+        "state": {
+          "branch": null,
+          "revision": "dba0d0a6689534e7b7aae7d3728af0ca60a24b66",
+          "version": "6.5.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
