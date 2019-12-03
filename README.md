@@ -3,7 +3,7 @@
 # Simple Chat App
 
 ## What is Simple Chat?
-A straight-forward communication app that utilizes Google Firebase to host its database. 
+Simple chat is a straight-forward communication app that allows its authenticated users to send each other unlimited sms messages. The app utilizes Google Firebase to host its database and provides its users with multiple sign-in methods, including Facebook and the new sign-in with Apple framework. 
 
 ### Main Frameworks, API, & IDE Used In This Project:
 
@@ -14,6 +14,7 @@ A straight-forward communication app that utilizes Google Firebase to host its d
 * IQKeyboardManagerSwift
 * FacebookCore / FacebookLogin
 * CryptoKit
+* UITableViewDiffableDataSource / NSDiffableDataSourceSnapshot
 
 *IDE* — xCode \
 *Application Architecture* - MVC
