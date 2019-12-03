@@ -8,4 +8,12 @@
 
 * UIKit (Foundation)
 * Combine
-* 
+* Firebase / FirebaseAuth / FirebaseFirestore
+* AuthenticationServices
+* IQKeyboardManagerSwift
+* FacebookCore / FacebookLogin
+* CryptoKit
+
+*IDE* — xCode \
+*Application Architecture* - MVC
+
