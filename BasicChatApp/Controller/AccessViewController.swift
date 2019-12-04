@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import FacebookLogin
 import AuthenticationServices
 import FirebaseFirestore
 import FirebaseAuth
 import CryptoKit
-import FacebookLogin
+
 
 /// Controller that handles access credentials and logging into Google Firebase.
 class AccessViewController: UIViewController {
