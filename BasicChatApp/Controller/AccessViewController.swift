@@ -335,10 +335,15 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		loginWithAppleIdAuthorization(idToken: idTokenString, nonce: generatedNonce)
 
 		// How to save the values to the user device's keychain.
+		addToKeyChain()
 	}
 	
 	func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
 		print(error.localizedDescription)
+	}
+	
+	func addToKeyChain(){
+		
 	}
 }
 
