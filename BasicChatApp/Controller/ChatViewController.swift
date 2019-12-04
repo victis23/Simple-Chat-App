@@ -125,6 +125,13 @@ extension ChatViewController {
 			guard let error = error else {return}
 			print(error.localizedDescription)
 		}
+		/*
+		_ = database.collection("NewCollection").document("SourceDoc").collection("Collection2").addDocument(data: ["Testing":"This is a test"]) { (error) in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+		}
+		*/
 	}
 	
 	// MARK: Create FireStore Observer
@@ -137,7 +144,6 @@ extension ChatViewController {
 			}
 			// After snapshot is unwrapped it's passed to a publisher who's subscriber assigns the value of our snapshot to a class property. This was done simply for combine practice seeing that we could have simply assigned the value directly to the property which also happens to be a publisher itself here.
 			guard let snapshot = snapshot else {return}
-			
 			self.future = Just(snapshot)
 				.eraseToAnyPublisher()
 			

@@ -10,7 +10,6 @@ import UIKit
 import AuthenticationServices
 import FirebaseFirestore
 import FirebaseAuth
-import Combine
 import CryptoKit
 import FacebookLogin
 
@@ -35,8 +34,7 @@ class AccessViewController: UIViewController {
 	var appDelegate = UIApplication.shared.delegate as! AppDelegate
 	
 	//MARK: Publishers & Subscribers
-	@Published var isRegistration : Bool?
-	fileprivate var registrationState : AnyCancellable!
+	var isRegistration : Bool?
 	
 	//MARK: - State
 	override func viewDidLoad() {
@@ -232,7 +230,7 @@ extension AccessViewController {
 	}
 }
 
-//MARK: - Login With Apple Delegate methods
+//MARK: - Login With Apple
 
 extension AccessViewController : ASAuthorizationControllerDelegate {
 
@@ -272,8 +270,9 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		loginWithAppleAuthorizationController.delegate = self
 		loginWithAppleAuthorizationController.presentationContextProvider = self
 		loginWithAppleAuthorizationController.performRequests()
-		
+	
 	}
+	
 	/// Encripts generated nonce which is assigned to the `request.nonce` property held by device For this App's Bundle.
 	func sha256(_ input: String)->String{
 		let inputData = Data(input.utf8)
