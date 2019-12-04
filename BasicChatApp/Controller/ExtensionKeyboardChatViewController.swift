@@ -39,6 +39,7 @@ extension ChatViewController {
 					self.communicationStack.transform = .identity
 				}
 			})
+		
 	}
 	
 	/// Method is called once the number of items in `chats` collection is == 5
