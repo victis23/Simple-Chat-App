@@ -292,13 +292,15 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		guard let appleIDCredentials = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
 		guard let appleIDToken = appleIDCredentials.identityToken else {return}
 		
+		appleUserCreds.authorizationCredential = authorization
+		
 		appleUserCreds.idToken = String(data: appleIDToken, encoding: .utf8)
 		guard appleUserCreds.idToken != nil else {fatalError()}
 		
 		loginWithAppleIdAuthorization()
 
-		// How to save the values to the user device's keychain.
-		addToKeyChain()
+//		 How to save the values to the user device's keychain.
+//		addToKeyChain()
 	}
 	
 	func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
@@ -306,7 +308,20 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 	}
 	
 	func addToKeyChain(){
+		guard let credential = appleUserCreds.authorizationCredential?.credential as? ASPasswordCredential else {return}
+		let username = credential.user
+		let password = credential.password
 		
+		guard let encodedPassword = password.data(using: String.Encoding.utf8) else {return}
+		
+		let newKeychainQuery : [String:Any] = [
+			kSecClass as String:kSecClassKey,
+			kSecAttrAccount as String:username,
+			kSecValueRef as String:encodedPassword,
+		]
+		
+		let status = SecItemAdd(newKeychainQuery as CFDictionary, nil)
+		guard status == errSecSuccess else {fatalError()}
 	}
 }
 

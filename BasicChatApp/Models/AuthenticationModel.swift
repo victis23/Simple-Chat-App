@@ -25,6 +25,7 @@ struct FireBaseUserCreds {
 struct AppleUserCreds {
 	var nonce : String
 	var idToken : String?
+	var authorizationCredential : ASAuthorization?
 	
 	/// Creates a randomized string to be used as unique nonce value.
 	static func globalNonceCreator(length:Int = 32)->String{
