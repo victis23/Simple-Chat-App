@@ -10,6 +10,7 @@ import UIKit
 import AuthenticationServices
 import CryptoKit
 import FirebaseAuth
+import FacebookLogin
 
 struct FireBaseUserCreds {
 	var username: String
@@ -72,4 +73,12 @@ struct AppleUserCreds {
 		return hashString
 	}
 	
+}
+
+struct FacebookUserCreds {
+	var accessToken : String
+}
+
+struct AuthCredentialToken {
+	var authCredUniqueToken : AuthCredential
 }

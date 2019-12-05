@@ -33,6 +33,8 @@ class AccessViewController: UIViewController {
 	var generatedNonce : String!
 	var fireBaseUserCreds : FireBaseUserCreds!
 	var appleUserCreds : AppleUserCreds!
+	var fbUserCreds : FacebookUserCreds!
+	var loginCred : AuthCredentialToken!
 	
 	var appDelegate = UIApplication.shared.delegate as! AppDelegate
 	
@@ -325,7 +327,10 @@ extension AccessViewController : LoginButtonDelegate {
 			return
 		}
 		let facebookCredential = FacebookAuthProvider.credential(withAccessToken: token.tokenString)
-		Auth.auth().signIn(with: facebookCredential) { (result, error) in
+		
+		loginCred = AuthCredentialToken(authCredUniqueToken: facebookCredential)
+		
+		Auth.auth().signIn(with: loginCred.authCredUniqueToken) { (result, error) in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -345,8 +350,11 @@ extension AccessViewController : LoginButtonDelegate {
 	func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
 		guard let error = error else {
 			guard let token = AccessToken.current?.tokenString else {return}
-			let facebookCreds = FacebookAuthProvider.credential(withAccessToken: token)
-			Auth.auth().signIn(with: facebookCreds) { (result, error) in
+			fbUserCreds = FacebookUserCreds(accessToken: token)
+			
+			loginCred = AuthCredentialToken(authCredUniqueToken: FacebookAuthProvider.credential(withAccessToken: fbUserCreds.accessToken))
+			
+			Auth.auth().signIn(with: loginCred.authCredUniqueToken) { (result, error) in
 				if let error = error {
 					print(error.localizedDescription)
 				}
