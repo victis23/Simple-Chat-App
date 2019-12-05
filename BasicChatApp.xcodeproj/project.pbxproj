@@ -28,6 +28,7 @@
 		7D5E2F912390BB8A00E076E8 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5E2F902390BB8A00E076E8 /* FacebookShare */; };
 		7D6BA68423816B5800EDE983 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6BA68323816B5800EDE983 /* Keys.swift */; };
 		7D6BA68623817D3400EDE983 /* ChatWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */; };
+		7D8DDA212399454800974F98 /* AuthenticationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8DDA202399454800974F98 /* AuthenticationModel.swift */; };
 		7DDB1A2C238180290079D39E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A2B238180290079D39E /* ChatViewController.swift */; };
 		7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */; };
 		7DDB1A352381C2280079D39E /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDB1A342381C2280079D39E /* AuthenticationServices.framework */; };
@@ -79,6 +80,7 @@
 		7D6BA68223815CF600EDE983 /* Simple Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Simple Chat.entitlements"; sourceTree = "<group>"; };
 		7D6BA68323816B5800EDE983 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		7D6BA68523817D3400EDE983 /* ChatWindow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChatWindow.storyboard; sourceTree = "<group>"; };
+		7D8DDA202399454800974F98 /* AuthenticationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationModel.swift; sourceTree = "<group>"; };
 		7DDB1A2B238180290079D39E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordHandlerModel.swift; sourceTree = "<group>"; };
 		7DDB1A342381C2280079D39E /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
@@ -213,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				7DDB1A372381D9290079D39E /* Chats.swift */,
+				7D8DDA202399454800974F98 /* AuthenticationModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				7D278B8E2380B2BF00433A7C /* AppDelegate.swift in Sources */,
 				7DDB1A382381D9290079D39E /* Chats.swift in Sources */,
 				7DDB1A332381B8A60079D39E /* PasswordHandlerModel.swift in Sources */,
+				7D8DDA212399454800974F98 /* AuthenticationModel.swift in Sources */,
 				7D278B902380B2BF00433A7C /* SceneDelegate.swift in Sources */,
 				7D21665823876CDB00865549 /* ExtensionAestheticsChatViewController.swift in Sources */,
 			);

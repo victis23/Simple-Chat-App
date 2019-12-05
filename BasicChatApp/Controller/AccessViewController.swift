@@ -31,6 +31,8 @@ class AccessViewController: UIViewController {
 	@IBOutlet weak var loginWithAppleButtonStack: UIStackView!
 	
 	var generatedNonce : String!
+	var fireBaseUserCreds : FireBaseUserCreds!
+	var appleUserCreds : AppleUserCreds!
 	
 	var appDelegate = UIApplication.shared.delegate as! AppDelegate
 	
@@ -130,7 +132,8 @@ class AccessViewController: UIViewController {
 		case true:
 			guard let password = passwordTextField.text, let passwordConfirmation = regPasswordField.text else {return}
 			if password == passwordConfirmation {
-				registrationAuthentification(username: username, password: password)
+				fireBaseUserCreds = FireBaseUserCreds(username: username, password: password)
+				registrationAuthentification()
 			}else{
 				passwordTextField.text = nil
 				regPasswordField.text = nil
@@ -138,7 +141,8 @@ class AccessViewController: UIViewController {
 			}
 		default:
 			guard let password = passwordTextField.text else {return}
-			loginAuthentification(username: username, password: password)
+			fireBaseUserCreds = FireBaseUserCreds(username: username, password: password)
+			loginAuthentification()
 		}
 	}
 	
@@ -189,8 +193,8 @@ class AccessViewController: UIViewController {
 extension AccessViewController {
 	
 	/// Creates credentials for new user on database.
-	func registrationAuthentification(username: String, password: String){
-		Auth.auth().createUser(withEmail: username, password: password) { [weak self](result, error) in
+	func registrationAuthentification(){
+		Auth.auth().createUser(withEmail: fireBaseUserCreds.username, password: fireBaseUserCreds.password) { [weak self](result, error) in
 			guard error == nil else {
 				self?.showAlert(with: error)
 				self?.forgotCredentialsStack.isHidden = false
@@ -201,8 +205,8 @@ extension AccessViewController {
 	}
 	
 	/// Allows existing users to sign-in to database.
-	func loginAuthentification(username: String, password: String){
-		Auth.auth().signIn(withEmail: username, password: password) { [weak self](result, error) in
+	func loginAuthentification(){
+		Auth.auth().signIn(withEmail: fireBaseUserCreds.username, password: fireBaseUserCreds.password) { [weak self](result, error) in
 			guard error == nil else {
 				self?.showAlert(with: error)
 				self?.forgotCredentialsStack.isHidden = false
@@ -215,9 +219,9 @@ extension AccessViewController {
 	
 	/// Utilizes nonce and idToken provided by Sign-in with Apple to authenticate a user with Google Firebase.
 	/// -	Important: Unlike the standard method for Firebase authentification, once the token is created here the user is good to go. Distringuishing between account creation and logging in is handled by `loginWithAppleClick(_:)`.
-	func loginWithAppleIdAuthorization(idToken:String, nonce: String){
+	func loginWithAppleIdAuthorization(){
 		
-		let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nonce)
+		let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: appleUserCreds.idToken!, rawNonce: appleUserCreds.nonce)
 		Auth.auth().signIn(with: credential) { [weak self](result, error) in
 			
 			if let error = error {
@@ -249,7 +253,8 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		
 		let provider = ASAuthorizationAppleIDProvider()
 		var request : ASAuthorizationAppleIDRequest!
-		generatedNonce = globalNonceCreator()
+		
+		appleUserCreds = AppleUserCreds(nonce: AppleUserCreds.globalNonceCreator(), idToken: nil)
 		
 		var authorizationController : ASAuthorizationController?
 		
@@ -263,7 +268,7 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		default:
 			request = provider.createRequest()
 			request.requestedScopes = [.fullName, .email]
-			request.nonce = sha256(generatedNonce)
+			request.nonce = appleUserCreds.sha256()
 			authorizationController = authorizationControllerMethod(requests: [request])
 		}
 		
@@ -274,66 +279,21 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 	
 	}
 	
-	/// Encripts generated nonce which is assigned to the `request.nonce` property held by device For this App's Bundle.
-	func sha256(_ input: String)->String{
-		let inputData = Data(input.utf8)
-		let hashData = SHA256.hash(data: inputData)
-		let hashString = hashData.compactMap({
-			return String(format: "%02x", $0)
-			}).joined()
-		return hashString
-	}
-	
 	/// Creates an `ASAuthorizationController` utilizing provided `ASAuthorizationRequest` Collections.
 	func authorizationControllerMethod(requests : [ASAuthorizationRequest]) -> ASAuthorizationController {
 		let controller = ASAuthorizationController(authorizationRequests: requests)
 		return controller
 	}
 	
-	/// Creates a randomized string to be used as unique nonce value.
-	func globalNonceCreator(length:Int = 32)->String{
-		
-		precondition(length > 0)
-		
-		let availableCharacters : Array<Character> = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
-		
-		var result = ""
-		var remainingLength = length
-		
-		while remainingLength > 0 {
-			let randoms: [UInt8] = (0..<16).map({_ in
-				var random: UInt8 = 0
-				let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
-				
-				if errorCode != errSecSuccess {
-					fatalError("Unable to create global nonce: \(errorCode)")
-				}
-				return random
-			})
-			
-			randoms.forEach({ random in
-				
-				if length == 0 {
-					return
-				}
-				
-				if random < availableCharacters.count {
-					result.append(availableCharacters[Int(random)])
-					remainingLength -= 1
-				}
-			})
-		}
-		
-		return result
-	}
-	
 	func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 		
 		guard let appleIDCredentials = authorization.credential as? ASAuthorizationAppleIDCredential else {return}
 		guard let appleIDToken = appleIDCredentials.identityToken else {return}
-		guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {return}
-	
-		loginWithAppleIdAuthorization(idToken: idTokenString, nonce: generatedNonce)
+		
+		appleUserCreds.idToken = String(data: appleIDToken, encoding: .utf8)
+		guard appleUserCreds.idToken != nil else {fatalError()}
+		
+		loginWithAppleIdAuthorization()
 
 		// How to save the values to the user device's keychain.
 		addToKeyChain()
