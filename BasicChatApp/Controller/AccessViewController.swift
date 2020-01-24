@@ -299,7 +299,7 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		
 		loginWithAppleIdAuthorization()
 
-//		 How to save the values to the user device's keychain.
+//		How to save the values to the user device's keychain.
 //		addToKeyChain()
 	}
 	
@@ -313,11 +313,13 @@ extension AccessViewController : ASAuthorizationControllerDelegate {
 		let password = credential.password
 		
 		guard let encodedPassword = password.data(using: String.Encoding.utf8) else {return}
+		guard let applicationTag = "com.duhmarket.BasicChatApp".data(using: String.Encoding.utf8) else {return}
 		
 		let newKeychainQuery : [String:Any] = [
-			kSecClass as String:kSecClassKey,
-			kSecAttrAccount as String:username,
-			kSecValueRef as String:encodedPassword,
+			kSecClass as String : kSecClassKey,
+			kSecAttrApplicationTag as String : applicationTag,
+			kSecAttrAccount as String : username,
+			kSecValueRef as String : encodedPassword,
 		]
 		
 		let status = SecItemAdd(newKeychainQuery as CFDictionary, nil)
