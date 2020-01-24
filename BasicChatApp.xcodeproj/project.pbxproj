@@ -22,7 +22,7 @@
 		7D278BC12380CC0A00433A7C /* Register.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D278BC02380CC0A00433A7C /* Register.storyboard */; };
 		7D278BC42380D1AE00433A7C /* AccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D278BC32380D1AE00433A7C /* AccessViewController.swift */; };
 		7D53EC0E23DB2D6B0014D60B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7D53EC0D23DB2D6B0014D60B /* .gitignore */; };
-		7D53EC1023DB2DB30014D60B /* secretFile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D53EC0F23DB2DB30014D60B /* secretFile.plist */; };
+		7D53EC1223DB316B0014D60B /* secretFile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D53EC1123DB316B0014D60B /* secretFile.plist */; };
 		7D5B19752380DADE00527944 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19742380DADE00527944 /* Podfile */; };
 		7D5B19772380DBB700527944 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5B19762380DBB700527944 /* GoogleService-Info.plist */; };
 		7D5E2F8D2390BB8A00E076E8 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7D5E2F8C2390BB8A00E076E8 /* FacebookCore */; };
@@ -78,7 +78,7 @@
 		7D278BC02380CC0A00433A7C /* Register.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Register.storyboard; sourceTree = "<group>"; };
 		7D278BC32380D1AE00433A7C /* AccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessViewController.swift; sourceTree = "<group>"; };
 		7D53EC0D23DB2D6B0014D60B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		7D53EC0F23DB2DB30014D60B /* secretFile.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = secretFile.plist; sourceTree = "<group>"; };
+		7D53EC1123DB316B0014D60B /* secretFile.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = secretFile.plist; sourceTree = "<group>"; };
 		7D5B19742380DADE00527944 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		7D5B19762380DBB700527944 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7D6BA68223815CF600EDE983 /* Simple Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Simple Chat.entitlements"; sourceTree = "<group>"; };
@@ -138,7 +138,6 @@
 				7D53EC0D23DB2D6B0014D60B /* .gitignore */,
 				7D5B19742380DADE00527944 /* Podfile */,
 				7D5B19762380DBB700527944 /* GoogleService-Info.plist */,
-				7D53EC0F23DB2DB30014D60B /* secretFile.plist */,
 				7D278B8C2380B2BF00433A7C /* BasicChatApp */,
 				7D278BA62380B2C000433A7C /* BasicChatAppTests */,
 				7D278BB12380B2C000433A7C /* BasicChatAppUITests */,
@@ -176,6 +175,7 @@
 				7D278B962380B2BF00433A7C /* BasicChatApp.xcdatamodeld */,
 				7D6BA68323816B5800EDE983 /* Keys.swift */,
 				7DDB1A322381B8A60079D39E /* PasswordHandlerModel.swift */,
+				7D53EC1123DB316B0014D60B /* secretFile.plist */,
 			);
 			path = BasicChatApp;
 			sourceTree = "<group>";
@@ -354,7 +354,7 @@
 				7D53EC0E23DB2D6B0014D60B /* .gitignore in Resources */,
 				7D5B19752380DADE00527944 /* Podfile in Resources */,
 				7D278B9D2380B2C000433A7C /* LaunchScreen.storyboard in Resources */,
-				7D53EC1023DB2DB30014D60B /* secretFile.plist in Resources */,
+				7D53EC1223DB316B0014D60B /* secretFile.plist in Resources */,
 				7D6BA68623817D3400EDE983 /* ChatWindow.storyboard in Resources */,
 				7D278B9A2380B2C000433A7C /* Assets.xcassets in Resources */,
 				7D278B952380B2BF00433A7C /* Main.storyboard in Resources */,
